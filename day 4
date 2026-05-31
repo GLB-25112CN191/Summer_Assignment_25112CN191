@@ -1,0 +1,155 @@
+#include <stdio.h>
+
+int main() {
+    int n, first = 0, second = 1, next;
+    
+    printf("Enter the number of terms: ");
+    scanf("%d", &n);
+    
+    printf("Fibonacci Series up to %d terms:\n", n);
+    
+    if(n >= 1) {
+        printf("%d ", first);
+    }
+    if(n >= 2) {
+        printf("%d ", second);
+    }
+    
+    for(int i = 3; i <= n; i++) {
+        next = first + second;
+        printf("%d ", next);
+        first = second;
+        second = next;
+    }
+    printf("\n");
+    
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int n, first = 0, second = 1, next;
+    
+    printf("Enter the position (n): ");
+    scanf("%d", &n);
+    
+    if(n == 1) {
+        printf("The 1st Fibonacci term is: 0\n");
+    }
+    else if(n == 2) {
+        printf("The 2nd Fibonacci term is: 1\n");
+    }
+    else {
+        for(int i = 3; i <= n; i++) {
+            next = first + second;
+            first = second;
+            second = next;
+        }
+        printf("The %dth Fibonacci term is: %d\n", n, second);
+    }
+    
+    return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+#include <math.h>
+
+int main() {
+    int num, originalNum, remainder, sum = 0, digits = 0;
+    
+    printf("Enter a number: ");
+    scanf("%d", &num);
+    
+    originalNum = num;
+    
+    
+    while(originalNum != 0) {
+        digits++;
+        originalNum /= 10;
+    }
+    
+    originalNum = num;
+    
+    
+    while(originalNum != 0) {
+        remainder = originalNum % 10;
+        sum += pow(remainder, digits);
+        originalNum /= 10;
+    }
+    
+    if(sum == num) {
+        printf("%d is an Armstrong number\n", num);
+    }
+    else {
+        printf("%d is not an Armstrong number\n", num);
+    }
+    
+    return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+#include <math.h>
+
+
+int isArmstrong(int num) {
+    int originalNum, remainder, sum = 0, digits = 0;
+    
+    originalNum = num;
+    
+  
+    while(originalNum != 0) {
+        digits++;
+        originalNum /= 10;
+    }
+    
+    originalNum = num;
+    
+    
+    while(originalNum != 0) {
+        remainder = originalNum % 10;
+        sum += pow(remainder, digits);
+        originalNum /= 10;
+    }
+    
+    return (sum == num);
+}
+
+int main() {
+    int start, end, count = 0;
+    
+    printf("Enter the range (start end): ");
+    scanf("%d %d", &start, &end);
+    
+    printf("Armstrong numbers between %d and %d are:\n", start, end);
+    
+    for(int i = start; i <= end; i++) {
+        if(isArmstrong(i)) {
+            printf("%d ", i);
+            count++;
+        }
+    }
+    
+    if(count == 0) {
+        printf("No Armstrong numbers found in this range.\n");
+    }
+    else {
+        printf("\nTotal Armstrong numbers: %d\n", count);
+    }
+    
+    return 0;
+}
