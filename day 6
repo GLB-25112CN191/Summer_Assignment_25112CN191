@@ -1,0 +1,107 @@
+#include <stdio.h>
+
+int main() {
+    int num, binary[32], i = 0;
+    
+    printf("Enter a decimal number: ");
+    scanf("%d", &num);
+    
+    if(num == 0) {
+        printf("Binary of 0 is: 0\n");
+        return 0;
+    }
+    
+    int temp = num;
+    while(temp > 0) {
+        binary[i] = temp % 2;
+        temp = temp / 2;
+        i++;
+    }
+    printf("Binary of %d is: ", num);
+    for(int j = i - 1; j >= 0; j--) {
+        printf("%d", binary[j]);
+    }
+    printf("\n");
+    
+    return 0;
+}
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+int main() {
+    char binary[65];
+    int decimal = 0, len;
+    
+    printf("Enter a binary number: ");
+    scanf("%s", binary);
+    
+    len = strlen(binary);
+    for(int i = 0; i < len; i++) {
+        if(binary[len - 1 - i] == '1') {
+            decimal += pow(2, i);
+        }
+        else if(binary[len - 1 - i] != '0') {
+            printf("Invalid binary number! Only 0 and 1 allowed.\n");
+            return 1;
+        }
+    }
+    
+    printf("Decimal of %s is: %d\n", binary, decimal);
+    
+    return 0;
+}
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int num, count = 0;
+    
+    printf("Enter a number: ");
+    scanf("%d", &num);
+    
+    int temp = num;
+    
+    while(temp > 0) {
+        if(temp & 1) {
+            count++;
+        }
+        temp >>= 1; 
+    }
+    
+    printf("Number of set bits in %d is: %d\n", num, count);
+    
+    return 0;
+}
+
+
+
+
+#include <stdio.h>
+int main() {
+    int x, n;
+    long long result = 1;
+    
+    printf("Enter base (x): ");
+    scanf("%d", &x);
+    printf("Enter exponent (n): ");
+    scanf("%d", &n);
+    
+    if(n < 0) {
+        printf("Negative exponent not supported for integer result\n");
+        return 1;
+    }
+    
+    for(int i = 1; i <= n; i++) {
+        result *= x;
+    }
+      printf("%d^%d = %lld\n", x, n, result);
+    
+    return 0;
+}
