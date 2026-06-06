@@ -1,0 +1,89 @@
+#include <stdio.h>
+
+int main() {
+    int rows;
+    
+    printf("Enter number of rows: ");
+    scanf("%d", &rows);
+    
+    printf("\nHalf Pyramid Pattern:\n\n");
+    
+    for(int i = 1; i <= rows; i++) {
+        for(int j = 1; j <= i; j++) {
+            printf("*");
+        }
+        printf("\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int rows;
+    
+    printf("Enter number of rows: ");
+    scanf("%d", &rows);
+    
+    printf("\nNumber Triangle:\n\n");
+    
+    for(int i = 1; i <= rows; i++) {
+        for(int j = 1; j <= i; j++) {
+            printf("%d", j);
+        }
+        printf("\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int rows;
+    
+    printf("Enter number of rows: ");
+    scanf("%d", &rows);
+    
+    printf("\nCharacter Triangle:\n\n");
+    
+    for(int i = 1; i <= rows; i++) {
+        for(int j = 1; j <= i; j++) {
+            printf("%c", 'A' + j - 1);
+        }
+        printf("\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int rows;
+    
+    printf("Enter number of rows: ");
+    scanf("%d", &rows);
+    
+    printf("\nRepeated Number Pattern:\n\n");
+    
+    for(int i = 1; i <= rows; i++) {
+        for(int j = 1; j <= i; j++) {
+            printf("%d", i);
+        }
+        printf("\n");
+    }
+    
+    return 0;
+}
