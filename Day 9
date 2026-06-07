@@ -1,0 +1,89 @@
+#include <stdio.h>
+
+int main() {
+    int rows;
+    
+    printf("Enter number of rows: ");
+    scanf("%d", &rows);
+    
+    printf("\nReverse Star Pattern:\n\n");
+    
+    for(int i = rows; i >= 1; i--) {
+        for(int j = 1; j <= i; j++) {
+            printf("*");
+        }
+        printf("\n");
+    }
+    
+    return 0;
+}
+
+
+
+#include <stdio.h>
+
+int main() {
+    int rows;
+    printf("Enter number of rows: ");
+    scanf("%d", &rows);
+    
+    printf("\nReverse Number Triangle:\n\n");
+    
+    for(int i = rows; i >= 1; i--) {
+        for(int j = 1; j <= i; j++) {
+            printf("%d", j);
+        }
+        printf("\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int rows;
+    printf("Enter number of rows: ");
+    scanf("%d", &rows);
+    
+    printf("\nRepeated Character Pattern:\n\n");
+    
+    for(int i = 1; i <= rows; i++) {
+        for(int j = 1; j <= i; j++) {
+            printf("%c", 'A' + i - 1);
+        }
+        printf("\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int size;
+    
+    printf("Enter the size of square: ");
+    scanf("%d", &size);
+    
+    printf("\nHollow Square Pattern:\n\n");
+    
+    for(int i = 1; i <= size; i++) {
+        for(int j = 1; j <= size; j++) {
+            if(i == 1 || i == size || j == 1 || j == size) {
+                printf("*");
+            } else {
+                printf(" ");
+            }
+        }
+        printf("\n");
+    }
+    
+    return 0;
+}
