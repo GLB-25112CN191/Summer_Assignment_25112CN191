@@ -1,0 +1,159 @@
+#include <stdio.h>
+#include <stdbool.h>
+bool isPalindrome(int n) {
+    if(n < 0) {
+        return false;
+    }
+    
+    int original = n;
+    int reversed = 0;
+    while(n > 0) {
+        reversed = reversed * 10 + (n % 10);
+        n /= 10;
+    }
+    return (original == reversed);
+}
+
+int main() {
+    int num;
+    
+    printf("Enter a number: ");
+    scanf("%d", &num);
+    
+    if(isPalindrome(num)) {
+        printf("%d is a palindrome number\n", num);
+    } else {
+        printf("%d is not a palindrome number\n", num);
+    }
+    
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <math.h>
+bool isArmstrong(int n) {
+    if(n < 0) return false;
+    
+    int original = n;
+    int sum = 0;
+    int digits = 0;
+    int temp = n;
+    while(temp > 0) {
+        digits++;
+        temp /= 10;
+    }
+    temp = n;
+    while(temp > 0) {
+        int digit = temp % 10;
+        sum += pow(digit, digits);
+        temp /= 10;
+    }
+    
+    return (sum == original);
+}
+
+int main() {
+    int num;
+    
+    printf("Enter a number: ");
+    scanf("%d", &num);
+    
+    if(isArmstrong(num)) {
+        printf("%d is an Armstrong number\n", num);
+    } else {
+        printf("%d is not an Armstrong number\n", num);
+    }
+    
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+void printFibonacci(int n) {
+    if(n <= 0) {
+        printf("Number of terms must be positive\n");
+        return;
+    }
+    
+    int first = 0, second = 1, next;
+    
+    printf("Fibonacci series up to %d terms: ", n);
+    
+    if(n >= 1) {
+        printf("%d ", first);
+    }
+    if(n >= 2) {
+        printf("%d ", second);
+    }
+    
+    for(int i = 3; i <= n; i++) {
+        next = first + second;
+        printf("%d ", next);
+        first = second;
+        second = next;
+    }
+    printf("\n");
+}
+
+int main() {
+    int n;
+    
+    printf("Enter number of terms: ");
+    scanf("%d", &n);
+    
+    printFibonacci(n);
+    
+    return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+#include <stdbool.h>
+bool isPerfect(int n) {
+    if(n <= 1) return false;
+    
+    int sum = 0;
+    
+    for(int i = 1; i <= n / 2; i++) {
+        if(n % i == 0) {
+            sum += i;
+        }
+    }
+    
+    return (sum == n);
+}
+
+int main() {
+    int num;
+    
+    printf("Enter a number: ");
+    scanf("%d", &num);
+    
+    if(isPerfect(num)) {
+        printf("%d is a perfect number\n", num);
+        
+        printf("Proper divisors: ");
+        for(int i = 1; i <= num / 2; i++) {
+            if(num % i == 0) {
+                printf("%d ", i);
+            }
+        }
+        printf("\n");
+    } else {
+        printf("%d is not a perfect number\n", num);
+    }
+    
+    return 0;
+}
