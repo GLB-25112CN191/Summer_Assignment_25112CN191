@@ -1,0 +1,194 @@
+#include <stdio.h>
+
+int main() {
+    int n, key, found = -1;
+    
+    printf("Enter the size of array: ");
+    scanf("%d", &n);
+    
+    int arr[n];
+    
+    printf("Enter %d elements: ", n);
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+    
+    printf("Enter element to search: ");
+    scanf("%d", &key);
+    
+    for(int i = 0; i < n; i++) {
+        if(arr[i] == key) {
+            found = i;
+            break;
+        }
+    }
+    
+    printf("\nArray elements: ");
+    for(int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    
+    if(found != -1) {
+        printf("Element %d found at index %d\n", key, found);
+    } else {
+        printf("Element %d not found in the array\n", key);
+    }
+    
+    return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int n, key, frequency = 0;
+    
+    printf("Enter the size of array: ");
+    scanf("%d", &n);
+    
+    int arr[n];
+    
+    printf("Enter %d elements: ", n);
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+    
+    printf("Enter element to find frequency: ");
+    scanf("%d", &key);
+    
+    for(int i = 0; i < n; i++) {
+        if(arr[i] == key) {
+            frequency++;
+        }
+    }
+    
+    printf("\nArray elements: ");
+    for(int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    printf("Frequency of %d = %d\n", key, frequency);
+    
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+#include <limits.h>
+
+int main() {
+    int n;
+    
+    printf("Enter the size of array: ");
+    scanf("%d", &n);
+    
+    if(n < 2) {
+        printf("Array must have at least 2 elements to find second largest\n");
+        return 1;
+    }
+    
+    int arr[n];
+    
+    printf("Enter %d elements: ", n);
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+    
+    int largest = arr[0];
+    int secondLargest = INT_MIN;
+    
+    for(int i = 1; i < n; i++) {
+        if(arr[i] > largest) {
+            secondLargest = largest;
+            largest = arr[i];
+        }
+        else if(arr[i] > secondLargest && arr[i] != largest) {
+            secondLargest = arr[i];
+        }
+    }
+    
+    printf("\nArray elements: ");
+    for(int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    printf("Largest element = %d\n", largest);
+    
+    if(secondLargest != INT_MIN) {
+        printf("Second largest element = %d\n", secondLargest);
+    } else {
+        printf("No distinct second largest element found\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int n;
+    
+    printf("Enter the size of array: ");
+    scanf("%d", &n);
+    
+    int arr[n];
+    int visited[n];
+    
+    for(int i = 0; i < n; i++) {
+        visited[i] = 0;
+    }
+    
+    printf("Enter %d elements: ", n);
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+    
+    printf("\nArray elements: ");
+    for(int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    
+    printf("Duplicate elements: ");
+    int dupCount = 0;
+    
+    for(int i = 0; i < n; i++) {
+        if(visited[i] == 1) {
+            continue;
+        }
+        
+        int count = 1;
+        for(int j = i + 1; j < n; j++) {
+            if(arr[i] == arr[j]) {
+                count++;
+                visited[j] = 1;
+            }
+        }
+        
+        if(count > 1) {
+            printf("%d ", arr[i]);
+            dupCount++;
+        }
+    }
+    
+    if(dupCount == 0) {
+        printf("No duplicates found");
+    }
+    printf("\n");
+    printf("Total duplicate values: %d\n", dupCount);
+    
+    return 0;
+}
