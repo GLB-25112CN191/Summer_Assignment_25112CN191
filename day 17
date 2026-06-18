@@ -1,0 +1,285 @@
+#include <stdio.h>
+
+int main() {
+    int n1, n2;
+    
+    printf("Enter the size of first array: ");
+    scanf("%d", &n1);
+    
+    int arr1[n1];
+    printf("Enter %d elements of first array: ", n1);
+    for(int i = 0; i < n1; i++) {
+        scanf("%d", &arr1[i]);
+    }
+    
+    printf("Enter the size of second array: ");
+    scanf("%d", &n2);
+    
+    int arr2[n2];
+    printf("Enter %d elements of second array: ", n2);
+    for(int i = 0; i < n2; i++) {
+        scanf("%d", &arr2[i]);
+    }
+    
+    int merged[n1 + n2];
+    
+    for(int i = 0; i < n1; i++) {
+        merged[i] = arr1[i];
+    }
+    
+    // Copy second array
+    for(int i = 0; i < n2; i++) {
+        merged[n1 + i] = arr2[i];
+    }
+    
+    // Display results
+    printf("\nFirst array: ");
+    for(int i = 0; i < n1; i++) {
+        printf("%d ", arr1[i]);
+    }
+    printf("\n");
+    
+    printf("Second array: ");
+    for(int i = 0; i < n2; i++) {
+        printf("%d ", arr2[i]);
+    }
+    printf("\n");
+    
+    printf("Merged array: ");
+    for(int i = 0; i < n1 + n2; i++) {
+        printf("%d ", merged[i]);
+    }
+    printf("\n");
+    
+    return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int n1, n2;
+    
+    printf("Enter the size of first array: ");
+    scanf("%d", &n1);
+    
+    int arr1[n1];
+    printf("Enter %d elements: ", n1);
+    for(int i = 0; i < n1; i++) {
+        scanf("%d", &arr1[i]);
+    }
+    
+    printf("Enter the size of second array: ");
+    scanf("%d", &n2);
+    
+    int arr2[n2];
+    printf("Enter %d elements: ", n2);
+    for(int i = 0; i < n2; i++) {
+        scanf("%d", &arr2[i]);
+    }
+    
+    // Find union
+    int unionArr[n1 + n2];
+    int unionSize = 0;
+    
+    // Add all elements of first array
+    for(int i = 0; i < n1; i++) {
+        unionArr[unionSize++] = arr1[i];
+    }
+    
+    // Add elements of second array if not already present
+    for(int i = 0; i < n2; i++) {
+        int isDuplicate = 0;
+        for(int j = 0; j < unionSize; j++) {
+            if(arr2[i] == unionArr[j]) {
+                isDuplicate = 1;
+                break;
+            }
+        }
+        if(!isDuplicate) {
+            unionArr[unionSize++] = arr2[i];
+        }
+    }
+    
+    // Display results
+    printf("\nFirst array: ");
+    for(int i = 0; i < n1; i++) {
+        printf("%d ", arr1[i]);
+    }
+    printf("\n");
+    
+    printf("Second array: ");
+    for(int i = 0; i < n2; i++) {
+        printf("%d ", arr2[i]);
+    }
+    printf("\n");
+    
+    printf("Union of arrays: ");
+    for(int i = 0; i < unionSize; i++) {
+        printf("%d ", unionArr[i]);
+    }
+    printf("\n");
+    printf("Union size: %d\n", unionSize);
+    
+    return 0;
+}
+
+
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int n1, n2;
+    
+    printf("Enter the size of first array: ");
+    scanf("%d", &n1);
+    
+    int arr1[n1];
+    printf("Enter %d elements: ", n1);
+    for(int i = 0; i < n1; i++) {
+        scanf("%d", &arr1[i]);
+    }
+    
+    printf("Enter the size of second array: ");
+    scanf("%d", &n2);
+    
+    int arr2[n2];
+    printf("Enter %d elements: ", n2);
+    for(int i = 0; i < n2; i++) {
+        scanf("%d", &arr2[i]);
+    }
+    
+    // Find intersection
+    int intersectionArr[n1 < n2 ? n1 : n2]; // Size = min(n1, n2)
+    int interSize = 0;
+    
+    for(int i = 0; i < n1; i++) {
+        for(int j = 0; j < n2; j++) {
+            if(arr1[i] == arr2[j]) {
+                // Check if already added
+                int isDuplicate = 0;
+                for(int k = 0; k < interSize; k++) {
+                    if(arr1[i] == intersectionArr[k]) {
+                        isDuplicate = 1;
+                        break;
+                    }
+                }
+                if(!isDuplicate) {
+                    intersectionArr[interSize++] = arr1[i];
+                }
+                break;
+            }
+        }
+    }
+    
+    // Display results
+    printf("\nFirst array: ");
+    for(int i = 0; i < n1; i++) {
+        printf("%d ", arr1[i]);
+    }
+    printf("\n");
+    
+    printf("Second array: ");
+    for(int i = 0; i < n2; i++) {
+        printf("%d ", arr2[i]);
+    }
+    printf("\n");
+    
+    printf("Intersection of arrays: ");
+    if(interSize == 0) {
+        printf("Empty (No common elements)");
+    } else {
+        for(int i = 0; i < interSize; i++) {
+            printf("%d ", intersectionArr[i]);
+        }
+    }
+    printf("\n");
+    printf("Intersection size: %d\n", interSize);
+    
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int n1, n2;
+    
+    printf("Enter the size of first array: ");
+    scanf("%d", &n1);
+    
+    int arr1[n1];
+    printf("Enter %d elements: ", n1);
+    for(int i = 0; i < n1; i++) {
+        scanf("%d", &arr1[i]);
+    }
+    
+    printf("Enter the size of second array: ");
+    scanf("%d", &n2);
+    
+    int arr2[n2];
+    printf("Enter %d elements: ", n2);
+    for(int i = 0; i < n2; i++) {
+        scanf("%d", &arr2[i]);
+    }
+    
+    // Find common elements 
+    int commonArr[n1 < n2 ? n1 : n2];
+    int commonCount = 0;
+    
+    for(int i = 0; i < n1; i++) {
+        for(int j = 0; j < n2; j++) {
+            if(arr1[i] == arr2[j]) {
+                // Check if already added
+                int isDuplicate = 0;
+                for(int k = 0; k < commonCount; k++) {
+                    if(arr1[i] == commonArr[k]) {
+                        isDuplicate = 1;
+                        break;
+                    }
+                }
+                if(!isDuplicate) {
+                    commonArr[commonCount++] = arr1[i];
+                }
+                break;
+            }
+        }
+    }
+    
+    // Display results
+    printf("\nFirst array: ");
+    for(int i = 0; i < n1; i++) {
+        printf("%d ", arr1[i]);
+    }
+    printf("\n");
+    
+    printf("Second array: ");
+    for(int i = 0; i < n2; i++) {
+        printf("%d ", arr2[i]);
+    }
+    printf("\n");
+    
+    printf("Common elements: ");
+    if(commonCount == 0) {
+        printf("None (No common elements)");
+    } else {
+        for(int i = 0; i < commonCount; i++) {
+            printf("%d ", commonArr[i]);
+        }
+    }
+    printf("\n");
+    printf("Number of common elements: %d\n", commonCount);
+    
+    return 0;
+}
