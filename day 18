@@ -1,0 +1,205 @@
+#include <stdio.h>
+
+int main() {
+    int n;
+    
+    printf("Enter the size of array: ");
+    scanf("%d", &n);
+    
+    int arr[n];
+    
+    printf("Enter %d elements: ", n);
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+    
+    printf("\nOriginal array: ");
+    for(int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    
+    int swapCount = 0;
+    for(int i = 0; i < n - 1; i++) {
+        int swapped = 0;
+        for(int j = 0; j < n - i - 1; j++) {
+            if(arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+                swapped = 1;
+                swapCount++;
+            }
+        }
+        if(!swapped) {
+            break;
+        }
+    }
+    
+    printf("Sorted array (Bubble Sort): ");
+    for(int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    printf("Total swaps: %d\n", swapCount);
+    
+    return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int n;
+    
+    printf("Enter the size of array: ");
+    scanf("%d", &n);
+    
+    int arr[n];
+    
+    printf("Enter %d elements: ", n);
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+    
+    printf("\nOriginal array: ");
+    for(int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    
+    int swapCount = 0;
+    for(int i = 0; i < n - 1; i++) {
+        int minIdx = i;
+        for(int j = i + 1; j < n; j++) {
+            if(arr[j] < arr[minIdx]) {
+                minIdx = j;
+            }
+        }
+        if(minIdx != i) {
+            int temp = arr[i];
+            arr[i] = arr[minIdx];
+            arr[minIdx] = temp;
+            swapCount++;
+        }
+    }
+    
+    printf("Sorted array (Selection Sort): ");
+    for(int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    printf("Total swaps: %d\n", swapCount);
+    
+    return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int n, key;
+    
+    printf("Enter the size of array: ");
+    scanf("%d", &n);
+    
+    int arr[n];
+    
+    printf("Enter %d sorted elements: ", n);
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+    
+    printf("Enter element to search: ");
+    scanf("%d", &key);
+    
+    printf("\nArray: ");
+    for(int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    
+    int left = 0, right = n - 1;
+    int found = -1;
+    int iterations = 0;
+    
+    while(left <= right) {
+        iterations++;
+        int mid = left + (right - left) / 2;
+        
+        printf("Searching... left=%d, right=%d, mid=%d, arr[mid]=%d\n", 
+               left, right, mid, arr[mid]);
+        
+        if(arr[mid] == key) {
+            found = mid;
+            break;
+        }
+        else if(arr[mid] < key) {
+            left = mid + 1;
+        }
+        else {
+            right = mid - 1;
+        }
+    }
+    
+    if(found != -1) {
+        printf("Element %d found at index %d\n", key, found);
+    } else {
+        printf("Element %d not found in the array\n", key);
+    }
+    printf("Iterations: %d\n", iterations);
+    
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int n;
+    
+    printf("Enter the size of array: ");
+    scanf("%d", &n);
+    
+    int arr[n];
+    
+    printf("Enter %d elements: ", n);
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+    
+    printf("\nOriginal array: ");
+    for(int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    
+    for(int i = 0; i < n - 1; i++) {
+        for(int j = 0; j < n - i - 1; j++) {
+            if(arr[j] < arr[j + 1]) { 
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+    
+    printf("Sorted array (Descending): ");
+    for(int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    
+    return 0;
+}
