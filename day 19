@@ -1,0 +1,255 @@
+#include <stdio.h>
+
+int main() {
+    int rows, cols;
+    
+    printf("Enter the number of rows: ");
+    scanf("%d", &rows);
+    printf("Enter the number of columns: ");
+    scanf("%d", &cols);
+    
+    int A[rows][cols], B[rows][cols], C[rows][cols];
+    
+    // Input first matrix
+    printf("\nEnter elements of first matrix:\n");
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            printf("A[%d][%d] = ", i, j);
+            scanf("%d", &A[i][j]);
+        }
+    }
+    
+    // Input second matrix
+    printf("\nEnter elements of second matrix:\n");
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            printf("B[%d][%d] = ", i, j);
+            scanf("%d", &B[i][j]);
+        }
+    }
+    
+    // Add matrices
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            C[i][j] = A[i][j] + B[i][j];
+        }
+    }
+    
+    // Display first matrix
+    printf("\nFirst Matrix:\n");
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            printf("%4d ", A[i][j]);
+        }
+        printf("\n");
+    }
+    
+    // Display second matrix
+    printf("\nSecond Matrix:\n");
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            printf("%4d ", B[i][j]);
+        }
+        printf("\n");
+    }
+    
+    // Display sum matrix
+    printf("\nSum Matrix (A + B):\n");
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            printf("%4d ", C[i][j]);
+        }
+        printf("\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int rows, cols;
+    
+    printf("Enter the number of rows: ");
+    scanf("%d", &rows);
+    printf("Enter the number of columns: ");
+    scanf("%d", &cols);
+    
+    int A[rows][cols], B[rows][cols], C[rows][cols];
+    
+    // Input first matrix
+    printf("\nEnter elements of first matrix:\n");
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            printf("A[%d][%d] = ", i, j);
+            scanf("%d", &A[i][j]);
+        }
+    }
+    
+    // Input second matrix
+    printf("\nEnter elements of second matrix:\n");
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            printf("B[%d][%d] = ", i, j);
+            scanf("%d", &B[i][j]);
+        }
+    }
+    
+    // Subtract matrices (A - B)
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            C[i][j] = A[i][j] - B[i][j];
+        }
+    }
+    
+    // Display first matrix
+    printf("\nFirst Matrix (A):\n");
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            printf("%4d ", A[i][j]);
+        }
+        printf("\n");
+    }
+    
+    // Display second matrix
+    printf("\nSecond Matrix (B):\n");
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            printf("%4d ", B[i][j]);
+        }
+        printf("\n");
+    }
+    
+    // Display difference matrix
+    printf("\nDifference Matrix (A - B):\n");
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            printf("%4d ", C[i][j]);
+        }
+        printf("\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int rows, cols;
+    
+    printf("Enter the number of rows: ");
+    scanf("%d", &rows);
+    printf("Enter the number of columns: ");
+    scanf("%d", &cols);
+    
+    int matrix[rows][cols];
+    int transpose[cols][rows];
+    
+    // Input matrix
+    printf("\nEnter elements of matrix:\n");
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            printf("matrix[%d][%d] = ", i, j);
+            scanf("%d", &matrix[i][j]);
+        }
+    }
+    
+    // Find transpose
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            transpose[j][i] = matrix[i][j];
+        }
+    }
+    
+    // Display original matrix
+    printf("\nOriginal Matrix (%dx%d):\n", rows, cols);
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            printf("%4d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+    
+    // Display transpose matrix
+    printf("\nTranspose Matrix (%dx%d):\n", cols, rows);
+    for(int i = 0; i < cols; i++) {
+        for(int j = 0; j < rows; j++) {
+            printf("%4d ", transpose[i][j]);
+        }
+        printf("\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int n;
+    
+    printf("Enter the size of square matrix: ");
+    scanf("%d", &n);
+    
+    int matrix[n][n];
+    
+    // Input matrix
+    printf("\nEnter elements of matrix:\n");
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            printf("matrix[%d][%d] = ", i, j);
+            scanf("%d", &matrix[i][j]);
+        }
+    }
+    
+    // Display matrix
+    printf("\nMatrix:\n");
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            printf("%4d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+    
+    // Calculate diagonal sums
+    int primarySum = 0;
+    int secondarySum = 0;
+    
+    for(int i = 0; i < n; i++) {
+        primarySum += matrix[i][i];
+        secondarySum += matrix[i][n - 1 - i];
+    }
+    
+    printf("\nPrimary Diagonal Sum (main diagonal): %d\n", primarySum);
+    printf("Secondary Diagonal Sum (anti-diagonal): %d\n", secondarySum);
+    
+    // If n is odd, the center element is counted twice
+    int totalSum = primarySum + secondarySum;
+    if(n % 2 == 1) {
+        int center = matrix[n/2][n/2];
+        totalSum -= center;
+        printf("Total Diagonal Sum (center counted once): %d\n", totalSum);
+    } else {
+        printf("Total Diagonal Sum: %d\n", totalSum);
+    }
+    
+    return 0;
+}
