@@ -1,0 +1,193 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char str[100];
+    int isPalindrome = 1;
+    
+    printf("Enter a string: ");
+    fgets(str, sizeof(str), stdin);
+    
+    
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(str[i] == '\n') {
+            str[i] = '\0';
+            break;
+        }
+    }
+    
+    int len = strlen(str);
+    
+  
+    for(int i = 0; i < len / 2; i++) {
+        if(str[i] != str[len - 1 - i]) {
+            isPalindrome = 0;
+            break;
+        }
+    }
+    
+    printf("\nString: %s\n", str);
+    if(isPalindrome) {
+        printf("The string is a PALINDROME\n");
+    } else {
+        printf("The string is NOT a palindrome\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char str[200];
+    int wordCount = 0;
+    int inWord = 0;
+    
+    printf("Enter a string: ");
+    fgets(str, sizeof(str), stdin);
+    
+    
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(str[i] == '\n') {
+            str[i] = '\0';
+            break;
+        }
+    }
+    
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(str[i] == ' ' || str[i] == '\t' || str[i] == '\n') {
+            inWord = 0;
+        }
+        else if(inWord == 0) {
+            inWord = 1;
+            wordCount++;
+        }
+    }
+    
+    printf("\nString: %s\n", str);
+    printf("Number of words: %d\n", wordCount);
+    
+    return 0;
+}
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char str[200], substr[100];
+    int found = -1;
+    
+    printf("Enter main string: ");
+    fgets(str, sizeof(str), stdin);
+    
+  
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(str[i] == '\n') {
+            str[i] = '\0';
+            break;
+        }
+    }
+    
+    printf("Enter substring to find: ");
+    fgets(substr, sizeof(substr), stdin);
+    
+    
+    for(int i = 0; substr[i] != '\0'; i++) {
+        if(substr[i] == '\n') {
+            substr[i] = '\0';
+            break;
+        }
+    }
+    
+    int lenStr = strlen(str);
+    int lenSub = strlen(substr);
+    
+    
+    for(int i = 0; i <= lenStr - lenSub; i++) {
+        int j;
+        for(j = 0; j < lenSub; j++) {
+            if(str[i + j] != substr[j]) {
+                break;
+            }
+        }
+        if(j == lenSub) {
+            found = i;
+            break;
+        }
+    }
+    
+    printf("\nMain string: %s\n", str);
+    printf("Substring: %s\n", substr);
+    
+    if(found != -1) {
+        printf("Substring found at index %d\n", found);
+    } else {
+        printf("Substring NOT found\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char str[200];
+    int freq[256] = {0};
+    
+    printf("Enter a string: ");
+    fgets(str, sizeof(str), stdin);
+    
+    
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(str[i] == '\n') {
+            str[i] = '\0';
+            break;
+        }
+    }
+    
+    
+    for(int i = 0; str[i] != '\0'; i++) {
+        freq[(int)str[i]]++;
+    }
+    
+    printf("\nString: %s\n", str);
+    printf("\nCharacter Frequency:\n");
+    printf("--------------------\n");
+    
+    int count = 0;
+    for(int i = 0; i < 256; i++) {
+        if(freq[i] > 0) {
+            if(i >= 32 && i <= 126) { 
+                printf("'%c' ", i);
+            } else {
+                printf("[%d] ", i);
+            }
+            printf(": %d\n", freq[i]);
+            count++;
+        }
+    }
+    
+    printf("--------------------\n");
+    printf("Total unique characters: %d\n", count);
+    printf("Total characters: %d\n", strlen(str));
+    
+    return 0;
+}
