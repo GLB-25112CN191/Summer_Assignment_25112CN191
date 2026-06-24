@@ -1,0 +1,217 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char str[200];
+    int freq[256] = {0};
+    
+    printf("Enter a string: ");
+    fgets(str, sizeof(str), stdin);
+    
+    
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(str[i] == '\n') {
+            str[i] = '\0';
+            break;
+        }
+    }
+    
+    
+    for(int i = 0; str[i] != '\0'; i++) {
+        freq[(int)str[i]]++;
+    }
+    
+    
+    char firstNonRepeating = '\0';
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(freq[(int)str[i]] == 1) {
+            firstNonRepeating = str[i];
+            break;
+        }
+    }
+    
+    printf("\nString: %s\n", str);
+    if(firstNonRepeating != '\0') {
+        printf("First non-repeating character: '%c'\n", firstNonRepeating);
+    } else {
+        printf("No non-repeating character found\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char str[200];
+    int freq[256] = {0};
+    
+    printf("Enter a string: ");
+    fgets(str, sizeof(str), stdin);
+    
+    
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(str[i] == '\n') {
+            str[i] = '\0';
+            break;
+        }
+    }
+    
+    
+    for(int i = 0; str[i] != '\0'; i++) {
+        freq[(int)str[i]]++;
+    }
+    
+  
+    char firstRepeating = '\0';
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(freq[(int)str[i]] > 1) {
+            firstRepeating = str[i];
+            break;
+        }
+    }
+    
+    printf("\nString: %s\n", str);
+    if(firstRepeating != '\0') {
+        printf("First repeating character: '%c'\n", firstRepeating);
+    } else {
+        printf("No repeating character found\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char str1[200], str2[200];
+    int freq[256] = {0};
+    int isAnagram = 1;
+    
+    printf("Enter first string: ");
+    fgets(str1, sizeof(str1), stdin);
+    
+    
+    for(int i = 0; str1[i] != '\0'; i++) {
+        if(str1[i] == '\n') {
+            str1[i] = '\0';
+            break;
+        }
+    }
+    
+    printf("Enter second string: ");
+    fgets(str2, sizeof(str2), stdin);
+    
+    
+    for(int i = 0; str2[i] != '\0'; i++) {
+        if(str2[i] == '\n') {
+            str2[i] = '\0';
+            break;
+        }
+    }
+    
+    
+    if(strlen(str1) != strlen(str2)) {
+        isAnagram = 0;
+    } else {
+        
+        for(int i = 0; str1[i] != '\0'; i++) {
+            freq[(int)tolower(str1[i])]++;
+        }
+        
+        
+        for(int i = 0; str2[i] != '\0'; i++) {
+            freq[(int)tolower(str2[i])]--;
+        }
+        
+        
+        for(int i = 0; i < 256; i++) {
+            if(freq[i] != 0) {
+                isAnagram = 0;
+                break;
+            }
+        }
+    }
+    
+    printf("\nFirst string: %s\n", str1);
+    printf("Second string: %s\n", str2);
+    
+    if(isAnagram) {
+        printf("The strings are ANAGRAMS\n");
+    } else {
+        printf("The strings are NOT anagrams\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char str[200];
+    int freq[256] = {0};
+    
+    printf("Enter a string: ");
+    fgets(str, sizeof(str), stdin);
+    
+    
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(str[i] == '\n') {
+            str[i] = '\0';
+            break;
+        }
+    }
+    
+    
+    for(int i = 0; str[i] != '\0'; i++) {
+        freq[(int)str[i]]++;
+    }
+    
+    
+    int maxFreq = 0;
+    char maxChar = str[0];
+    
+    for(int i = 0; i < 256; i++) {
+        if(freq[i] > maxFreq) {
+            maxFreq = freq[i];
+            maxChar = (char)i;
+        }
+    }
+    
+    
+    int minFreq = maxFreq;
+    char minChar = str[0];
+    
+    for(int i = 0; i < 256; i++) {
+        if(freq[i] > 0 && freq[i] < minFreq) {
+            minFreq = freq[i];
+            minChar = (char)i;
+        }
+    }
+    
+    printf("\nString: %s\n", str);
+    printf("Maximum occurring character: '%c' (%d times)\n", maxChar, maxFreq);
+    printf("Minimum occurring character: '%c' (%d times)\n", minChar, minFreq);
+    
+    return 0;
+}
