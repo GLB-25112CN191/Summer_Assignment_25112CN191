@@ -1,0 +1,221 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+int main() {
+    char str1[200], str2[200];
+    char temp[400];
+    
+    printf("Enter first string: ");
+    fgets(str1, sizeof(str1), stdin);
+    
+    // Remove newline
+    for(int i = 0; str1[i] != '\0'; i++) {
+        if(str1[i] == '\n') {
+            str1[i] = '\0';
+            break;
+        }
+    }
+    
+    printf("Enter second string: ");
+    fgets(str2, sizeof(str2), stdin);
+    
+    // Remove newline
+    for(int i = 0; str2[i] != '\0'; i++) {
+        if(str2[i] == '\n') {
+            str2[i] = '\0';
+            break;
+        }
+    }
+    
+    // Check if lengths are equal
+    int len1 = strlen(str1);
+    int len2 = strlen(str2);
+    
+    bool isRotation = false;
+    
+    if(len1 == len2 && len1 > 0) {
+        // Create temp = str1 + str1
+        strcpy(temp, str1);
+        strcat(temp, str1);
+        
+        // Check if str2 is substring of temp
+        if(strstr(temp, str2) != NULL) {
+            isRotation = true;
+        }
+    }
+    
+    printf("\nFirst string: %s\n", str1);
+    printf("Second string: %s\n", str2);
+    
+    if(isRotation) {
+        printf("The strings are ROTATIONS of each other\n");
+    } else {
+        printf("The strings are NOT rotations\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char str[200], compressed[400];
+    int j = 0;
+    
+    printf("Enter a string: ");
+    fgets(str, sizeof(str), stdin);
+    
+    // Remove newline
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(str[i] == '\n') {
+            str[i] = '\0';
+            break;
+        }
+    }
+    
+    // Compress the string
+    for(int i = 0; str[i] != '\0'; i++) {
+        int count = 1;
+        
+        // Count consecutive characters
+        while(str[i] == str[i + 1]) {
+            count++;
+            i++;
+        }
+        
+        // Add character
+        compressed[j++] = str[i];
+        
+        // Add count if greater than 1
+        if(count > 1) {
+            char countStr[10];
+            sprintf(countStr, "%d", count);
+            for(int k = 0; countStr[k] != '\0'; k++) {
+                compressed[j++] = countStr[k];
+            }
+        }
+    }
+    compressed[j] = '\0';
+    
+    printf("\nOriginal: %s\n", str);
+    printf("Compressed: %s\n", compressed);
+    printf("Original length: %lu\n", strlen(str));
+    printf("Compressed length: %lu\n", strlen(compressed));
+    
+    if(strlen(compressed) < strlen(str)) {
+        printf("Compression successful! (Saved %lu characters)\n", 
+               strlen(str) - strlen(compressed));
+    } else {
+        printf("No compression achieved\n");
+    }
+    
+    return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char str[500];
+    char longest[100] = "";
+    char current[100] = "";
+    int maxLen = 0;
+    int wordCount = 0;
+    
+    printf("Enter a sentence: ");
+    fgets(str, sizeof(str), stdin);
+    
+    // Remove newline
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(str[i] == '\n') {
+            str[i] = '\0';
+            break;
+        }
+    }
+    
+    // Find longest word
+    int j = 0;
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(str[i] != ' ' && str[i] != '\t' && str[i] != '\n') {
+            current[j++] = str[i];
+        }
+        else if(j > 0) {
+            current[j] = '\0';
+            wordCount++;
+            
+            int len = strlen(current);
+            if(len > maxLen) {
+                maxLen = len;
+                strcpy(longest, current);
+            }
+            j = 0;
+        }
+    }
+    
+    // Check last word
+    if(j > 0) {
+        current[j] = '\0';
+        wordCount++;
+        if(strlen(current) > maxLen) {
+            maxLen = strlen(current);
+            strcpy(longest, current);
+        }
+    }
+    
+    printf("\nSentence: %s\n", str);
+    printf("Total words: %d\n", wordCount);
+    printf("Longest word: \"%s\" (length: %d)\n", longest, maxLen);
+    
+    return 0;
+}
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char str[200];
+    int freq[256] = {0};
+    int j = 0;
+    
+    printf("Enter a string: ");
+    fgets(str, sizeof(str), stdin);
+    
+    // Remove newline
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(str[i] == '\n') {
+            str[i] = '\0';
+            break;
+        }
+    }
+    
+    // Remove duplicate characters
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(freq[(int)str[i]] == 0) {
+            freq[(int)str[i]] = 1;
+            str[j++] = str[i];
+        }
+    }
+    str[j] = '\0';
+    
+    printf("\nString after removing duplicates: %s\n", str);
+    printf("New length: %lu\n", strlen(str));
+    
+    return 0;
+}
