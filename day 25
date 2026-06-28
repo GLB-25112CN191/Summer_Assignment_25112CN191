@@ -1,0 +1,262 @@
+#include <stdio.h>
+
+int main() {
+    int n1, n2;
+    
+    printf("Enter the size of first sorted array: ");
+    scanf("%d", &n1);
+    
+    int arr1[n1];
+    printf("Enter %d sorted elements: ", n1);
+    for(int i = 0; i < n1; i++) {
+        scanf("%d", &arr1[i]);
+    }
+    
+    printf("Enter the size of second sorted array: ");
+    scanf("%d", &n2);
+    
+    int arr2[n2];
+    printf("Enter %d sorted elements: ", n2);
+    for(int i = 0; i < n2; i++) {
+        scanf("%d", &arr2[i]);
+    }
+    
+    
+    int merged[n1 + n2];
+    int i = 0, j = 0, k = 0;
+    
+    while(i < n1 && j < n2) {
+        if(arr1[i] < arr2[j]) {
+            merged[k++] = arr1[i++];
+        } else {
+            merged[k++] = arr2[j++];
+        }
+    }
+    
+    
+    while(i < n1) {
+        merged[k++] = arr1[i++];
+    }
+    while(j < n2) {
+        merged[k++] = arr2[j++];
+    }
+    
+    
+    printf("\nFirst sorted array: ");
+    for(int i = 0; i < n1; i++) {
+        printf("%d ", arr1[i]);
+    }
+    printf("\n");
+    
+    printf("Second sorted array: ");
+    for(int i = 0; i < n2; i++) {
+        printf("%d ", arr2[i]);
+    }
+    printf("\n");
+    
+    printf("Merged sorted array: ");
+    for(int i = 0; i < n1 + n2; i++) {
+        printf("%d ", merged[i]);
+    }
+    printf("\n");
+    
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdbool.h>
+
+int main() {
+    char str1[200], str2[200];
+    int freq1[256] = {0}, freq2[256] = {0};
+    bool found[256] = {false};
+    
+    printf("Enter first string: ");
+    fgets(str1, sizeof(str1), stdin);
+    
+    
+    for(int i = 0; str1[i] != '\0'; i++) {
+        if(str1[i] == '\n') {
+            str1[i] = '\0';
+            break;
+        }
+    }
+    
+    printf("Enter second string: ");
+    fgets(str2, sizeof(str2), stdin);
+    
+    
+    for(int i = 0; str2[i] != '\0'; i++) {
+        if(str2[i] == '\n') {
+            str2[i] = '\0';
+            break;
+        }
+    }
+    
+    
+    for(int i = 0; str1[i] != '\0'; i++) {
+        freq1[(int)str1[i]]++;
+    }
+    
+    
+    for(int i = 0; str2[i] != '\0'; i++) {
+        freq2[(int)str2[i]]++;
+    }
+    
+    
+    printf("\nFirst string: %s\n", str1);
+    printf("Second string: %s\n", str2);
+    
+    printf("Common characters: ");
+    int commonCount = 0;
+    
+    for(int i = 0; i < 256; i++) {
+        if(freq1[i] > 0 && freq2[i] > 0) {
+            
+            if(i >= 32 && i <= 126) {
+                printf("'%c' ", (char)i);
+            } else {
+                printf("[%d] ", i);
+            }
+            commonCount++;
+        }
+    }
+    
+    if(commonCount == 0) {
+        printf("None");
+    }
+    printf("\n");
+    printf("Total common characters: %d\n", commonCount);
+    
+    return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    int n;
+    
+    printf("Enter number of names: ");
+    scanf("%d", &n);
+    getchar(); 
+    
+    char names[n][50];
+    char temp[50];
+    
+  
+    printf("Enter %d names:\n", n);
+    for(int i = 0; i < n; i++) {
+        fgets(names[i], sizeof(names[i]), stdin);
+        
+        for(int j = 0; names[i][j] != '\0'; j++) {
+            if(names[i][j] == '\n') {
+                names[i][j] = '\0';
+                break;
+            }
+        }
+    }
+    
+
+    for(int i = 0; i < n - 1; i++) {
+        for(int j = 0; j < n - i - 1; j++) {
+            if(strcmp(names[j], names[j + 1]) > 0) {
+                strcpy(temp, names[j]);
+                strcpy(names[j], names[j + 1]);
+                strcpy(names[j + 1], temp);
+            }
+        }
+    }
+    
+    printf("\nOriginal order:\n");
+    for(int i = 0; i < n; i++) {
+        printf("%d. %s\n", i + 1, names[i]);
+    }
+    
+    
+    printf("\nSorted alphabetically:\n");
+    for(int i = 0; i < n; i++) {
+        printf("%d. %s\n", i + 1, names[i]);
+    }
+    
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char sentence[500];
+    char words[100][50];
+    int wordCount = 0;
+    char temp[50];
+    
+    printf("Enter a sentence: ");
+    fgets(sentence, sizeof(sentence), stdin);
+    
+    
+    for(int i = 0; sentence[i] != '\0'; i++) {
+        if(sentence[i] == '\n') {
+            sentence[i] = '\0';
+            break;
+        }
+    }
+    
+    
+    int j = 0;
+    for(int i = 0; sentence[i] != '\0'; i++) {
+        if(isalpha(sentence[i])) {
+            words[wordCount][j++] = sentence[i];
+        }
+        else if(j > 0) {
+            words[wordCount][j] = '\0';
+            wordCount++;
+            j = 0;
+        }
+    }
+    if(j > 0) {
+        words[wordCount][j] = '\0';
+        wordCount++;
+    }
+    
+    
+    printf("\nOriginal words:\n");
+    for(int i = 0; i < wordCount; i++) {
+        printf("%d. %s (length: %lu)\n", i + 1, words[i], strlen(words[i]));
+    }
+    
+  
+    for(int i = 0; i < wordCount - 1; i++) {
+        for(int j = 0; j < wordCount - i - 1; j++) {
+            if(strlen(words[j]) > strlen(words[j + 1])) {
+                strcpy(temp, words[j]);
+                strcpy(words[j], words[j + 1]);
+                strcpy(words[j + 1], temp);
+            }
+        }
+    }
+    
+    
+    printf("\nSorted by length (ascending):\n");
+    for(int i = 0; i < wordCount; i++) {
+        printf("%d. %s (length: %lu)\n", i + 1, words[i], strlen(words[i]));
+    }
+    
+    return 0;
+}
