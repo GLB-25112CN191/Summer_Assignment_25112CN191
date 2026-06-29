@@ -1,0 +1,382 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main() {
+    int secretNumber, guess, attempts = 0;
+    int maxAttempts = 10;
+    int low = 1, high = 100;
+    
+    
+    srand(time(0));
+    secretNumber = rand() % 100 + 1; 
+    
+    printf("=========================================\n");
+    printf("      WELCOME TO NUMBER GUESSING GAME     \n");
+    printf("=========================================\n");
+    printf("I have selected a number between 1 and 100.\n");
+    printf("You have %d attempts to guess it!\n\n", maxAttempts);
+    
+    do {
+        printf("Attempt %d/%d: Enter your guess: ", attempts + 1, maxAttempts);
+        scanf("%d", &guess);
+        attempts++;
+        
+        if(guess < secretNumber) {
+            printf("   Too low! Try a higher number.\n");
+        } else if(guess > secretNumber) {
+            printf("   Too high! Try a lower number.\n");
+        } else {
+            printf("\n=========================================\n");
+            printf("   🎉 CONGRATULATIONS! You guessed it!\n");
+            printf("   The number was %d\n", secretNumber);
+            printf("   You took %d attempts.\n", attempts);
+            printf("=========================================\n");
+            break;
+        }
+        
+        
+        if(attempts == maxAttempts - 3) {
+            printf("   Hint: You have only 3 attempts left!\n");
+        }
+        if(attempts == maxAttempts) {
+            printf("\n=========================================\n");
+            printf("   😞 GAME OVER! Better luck next time!\n");
+            printf("   The number was %d\n", secretNumber);
+            printf("=========================================\n");
+        }
+        printf("\n");
+        
+    } while(attempts < maxAttempts);
+    
+    return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char name[50];
+    int age, choice;
+    char citizen;
+    int voterID;
+    
+    printf("=========================================\n");
+    printf("      VOTING ELIGIBILITY SYSTEM          \n");
+    printf("=========================================\n");
+    
+    printf("Enter your full name: ");
+    fgets(name, sizeof(name), stdin);
+    
+    for(int i = 0; name[i] != '\0'; i++) {
+        if(name[i] == '\n') {
+            name[i] = '\0';
+            break;
+        }
+    }
+    
+    printf("Enter your age: ");
+    scanf("%d", &age);
+    
+    printf("Are you a citizen of this country? (y/n): ");
+    scanf(" %c", &citizen);
+    
+    printf("Do you have a valid voter ID? (1 for Yes, 0 for No): ");
+    scanf("%d", &voterID);
+    
+    printf("\n=========================================\n");
+    printf("          ELIGIBILITY RESULT             \n");
+    printf("=========================================\n");
+    printf("Name: %s\n", name);
+    printf("Age: %d\n", age);
+    printf("Citizen: %s\n", (citizen == 'y' || citizen == 'Y') ? "Yes" : "No");
+    printf("Voter ID: %s\n", voterID ? "Yes" : "No");
+    printf("-----------------------------------------\n");
+    
+    if(age >= 18 && (citizen == 'y' || citizen == 'Y') && voterID == 1) {
+        printf("✅ YOU ARE ELIGIBLE TO VOTE!\n");
+        printf("   Please exercise your right to vote.\n");
+    } else {
+        printf("❌ YOU ARE NOT ELIGIBLE TO VOTE\n");
+        printf("   Reasons:\n");
+        if(age < 18) {
+            printf("   - Age must be 18 or above (Current: %d)\n", age);
+        }
+        if(!(citizen == 'y' || citizen == 'Y')) {
+            printf("   - Must be a citizen of the country\n");
+        }
+        if(voterID != 1) {
+            printf("   - Must have a valid voter ID\n");
+        }
+    }
+    printf("=========================================\n");
+    
+    return 0;
+}
+
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    int pin = 1234, enteredPin;
+    float balance = 10000.00;
+    int choice;
+    float amount;
+    int attempts = 0;
+    int isAuthenticated = 0;
+    
+    printf("=========================================\n");
+    printf("            ATM SIMULATION              \n");
+    printf("=========================================\n");
+    
+    
+    do {
+        printf("Enter your 4-digit PIN: ");
+        scanf("%d", &enteredPin);
+        attempts++;
+        
+        if(enteredPin == pin) {
+            isAuthenticated = 1;
+            printf("✅ PIN verified successfully!\n\n");
+            break;
+        } else {
+            printf("❌ Invalid PIN! (%d attempts remaining)\n", 3 - attempts);
+        }
+    } while(attempts < 3);
+    
+    if(!isAuthenticated) {
+        printf("\n🔒 Too many failed attempts. Account locked.\n");
+        return 1;
+    }
+    
+    do {
+        printf("\n=========================================\n");
+        printf("              ATM MENU                  \n");
+        printf("=========================================\n");
+        printf("1. Check Balance\n");
+        printf("2. Deposit Money\n");
+        printf("3. Withdraw Money\n");
+        printf("4. Mini Statement\n");
+        printf("5. Change PIN\n");
+        printf("6. Exit\n");
+        printf("=========================================\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        
+        switch(choice) {
+            case 1:
+                printf("\n💳 Your current balance: ₹%.2f\n", balance);
+                break;
+                
+            case 2:
+                printf("\nEnter amount to deposit: ₹");
+                scanf("%f", &amount);
+                if(amount > 0) {
+                    balance += amount;
+                    printf("✅ ₹%.2f deposited successfully!\n", amount);
+                    printf("💳 New balance: ₹%.2f\n", balance);
+                } else {
+                    printf("❌ Invalid amount!\n");
+                }
+                break;
+                
+            case 3:
+                printf("\nEnter amount to withdraw: ₹");
+                scanf("%f", &amount);
+                
+                if(amount <= 0) {
+                    printf("❌ Invalid amount!\n");
+                } else if(amount > balance) {
+                    printf("❌ Insufficient balance!\n");
+                    printf("   Your balance: ₹%.2f\n", balance);
+                } else if(amount > 20000) {
+                    printf("❌ Daily withdrawal limit exceeded! (Max: ₹20000)\n");
+                } else {
+                    balance -= amount;
+                    printf("✅ Please collect your cash: ₹%.2f\n", amount);
+                    printf("💳 Remaining balance: ₹%.2f\n", balance);
+                }
+                break;
+                
+            case 4:
+                printf("\n📄 MINI STATEMENT\n");
+                printf("-----------------------------------------\n");
+                printf("Account Type: Savings\n");
+                printf("Current Balance: ₹%.2f\n", balance);
+                printf("Last Transaction: %s\n", 
+                       choice == 2 ? "Deposit" : (choice == 3 ? "Withdrawal" : "N/A"));
+                printf("-----------------------------------------\n");
+                break;
+                
+            case 5:
+                printf("\nEnter current PIN: ");
+                scanf("%d", &enteredPin);
+                if(enteredPin == pin) {
+                    printf("Enter new PIN: ");
+                    scanf("%d", &pin);
+                    printf("✅ PIN changed successfully!\n");
+                } else {
+                    printf("❌ Incorrect PIN!\n");
+                }
+                break;
+                
+            case 6:
+                printf("\n👋 Thank you for using ATM!\n");
+                printf("   Please collect your card.\n");
+                break;
+                
+            default:
+                printf("❌ Invalid choice! Please try again.\n");
+        }
+    } while(choice != 6);
+    
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+typedef struct {
+    char question[200];
+    char options[4][50];
+    char answer;
+} Question;
+
+int main() {
+    
+    Question quiz[] = {
+        {
+            "What is the capital of France?",
+            {"Berlin", "Madrid", "Paris", "Rome"},
+            'C'
+        },
+        {
+            "Which planet is known as the Red Planet?",
+            {"Venus", "Mars", "Jupiter", "Saturn"},
+            'B'
+        },
+        {
+            "Who wrote the national anthem of India?",
+            {"Rabindranath Tagore", "Mahatma Gandhi", "Subhash Chandra Bose", "Bankim Chandra"},
+            'A'
+        },
+        {
+            "Which is the largest ocean on Earth?",
+            {"Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"},
+            'D'
+        },
+        {
+            "What is the chemical symbol for water?",
+            {"H2O", "CO2", "NaCl", "HCl"},
+            'A'
+        },
+        {
+            "Who is known as the father of computers?",
+            {"Alan Turing", "Charles Babbage", "Bill Gates", "Steve Jobs"},
+            'B'
+        },
+        {
+            "What is the square root of 144?",
+            {"10", "11", "12", "13"},
+            'C'
+        },
+        {
+            "Which gas is most abundant in Earth's atmosphere?",
+            {"Oxygen", "Carbon Dioxide", "Argon", "Nitrogen"},
+            'D'
+        },
+        {
+            "What is the capital of Japan?",
+            {"Seoul", "Beijing", "Tokyo", "Bangkok"},
+            'C'
+        },
+        {
+            "Who painted the Mona Lisa?",
+            {"Michelangelo", "Leonardo da Vinci", "Raphael", "Donatello"},
+            'B'
+        }
+    };
+    
+    int numQuestions = sizeof(quiz) / sizeof(quiz[0]);
+    char answer;
+    int score = 0;
+    int wrongQuestions[10];
+    int wrongCount = 0;
+    
+    printf("=========================================\n");
+    printf("         QUIZ APPLICATION               \n");
+    printf("=========================================\n");
+    printf("Total Questions: %d\n", numQuestions);
+    printf("You need to select the correct option (A, B, C, or D)\n");
+    printf("Press any key to start...");
+    getchar();
+    
+    for(int i = 0; i < numQuestions; i++) {
+        printf("\n=========================================\n");
+        printf("Q%d. %s\n", i + 1, quiz[i].question);
+        printf("=========================================\n");
+        printf("A. %s\n", quiz[i].options[0]);
+        printf("B. %s\n", quiz[i].options[1]);
+        printf("C. %s\n", quiz[i].options[2]);
+        printf("D. %s\n", quiz[i].options[3]);
+        printf("Your answer: ");
+        scanf(" %c", &answer);
+        answer = toupper(answer);
+        
+        if(answer == quiz[i].answer) {
+            printf("✅ Correct! Well done! 🎉\n");
+            score++;
+        } else {
+            printf("❌ Wrong! The correct answer is %c\n", quiz[i].answer);
+            wrongQuestions[wrongCount++] = i;
+        }
+    }
+    
+    
+    printf("\n=========================================\n");
+    printf("            QUIZ RESULTS                 \n");
+    printf("=========================================\n");
+    printf("Total Questions: %d\n", numQuestions);
+    printf("Correct Answers: %d\n", score);
+    printf("Wrong Answers: %d\n", numQuestions - score);
+    printf("Score: %.1f%%\n", (float)score / numQuestions * 100);
+    printf("-----------------------------------------\n");
+    
+    if(score >= 8) {
+        printf("🏆 EXCELLENT! You are a genius!\n");
+    } else if(score >= 6) {
+        printf("👍 GOOD JOB! Keep learning!\n");
+    } else if(score >= 4) {
+        printf("📚 AVERAGE! Review the topics you missed.\n");
+    } else {
+        printf("📖 NEEDS IMPROVEMENT! Study more and try again.\n");
+    }
+    
+    if(wrongCount > 0) {
+        printf("\n📝 Questions you got wrong:\n");
+        printf("-----------------------------------------\n");
+        for(int i = 0; i < wrongCount; i++) {
+            int idx = wrongQuestions[i];
+            printf("%d. %s\n", idx + 1, quiz[idx].question);
+            printf("   Correct Answer: %c\n", quiz[idx].answer);
+        }
+    }
+    printf("=========================================\n");
+    
+    return 0;
+}
