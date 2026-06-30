@@ -1,0 +1,1056 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct {
+    int rollNo;
+    char name[50];
+    int age;
+    char branch[30];
+    float percentage;
+} Student;
+
+
+void addStudent(Student students[], int *count);
+void displayStudents(Student students[], int count);
+void searchStudent(Student students[], int count);
+void updateStudent(Student students[], int count);
+void deleteStudent(Student students[], int *count);
+void calculateStatistics(Student students[], int count);
+void sortStudents(Student students[], int count);
+
+int main() {
+    Student students[100];
+    int count = 0;
+    int choice;
+    
+    do {
+        printf("\n=========================================\n");
+        printf("     STUDENT RECORD MANAGEMENT SYSTEM     \n");
+        printf("=========================================\n");
+        printf("1. Add Student\n");
+        printf("2. Display All Students\n");
+        printf("3. Search Student\n");
+        printf("4. Update Student\n");
+        printf("5. Delete Student\n");
+        printf("6. Statistics (Average, Topper, etc.)\n");
+        printf("7. Sort Students\n");
+        printf("8. Exit\n");
+        printf("=========================================\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        getchar(); // Clear newline
+        
+        switch(choice) {
+            case 1:
+                addStudent(students, &count);
+                break;
+            case 2:
+                displayStudents(students, count);
+                break;
+            case 3:
+                searchStudent(students, count);
+                break;
+            case 4:
+                updateStudent(students, count);
+                break;
+            case 5:
+                deleteStudent(students, &count);
+                break;
+            case 6:
+                calculateStatistics(students, count);
+                break;
+            case 7:
+                sortStudents(students, count);
+                break;
+            case 8:
+                printf("\nExiting system...\n");
+                break;
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while(choice != 8);
+    
+    return 0;
+}
+
+
+void addStudent(Student students[], int *count) {
+    if(*count >= 100) {
+        printf("Database full!\n");
+        return;
+    }
+    
+    Student s;
+    printf("\n--- Add Student ---\n");
+    printf("Roll Number: ");
+    scanf("%d", &s.rollNo);
+    getchar();
+    
+    
+    for(int i = 0; i < *count; i++) {
+        if(students[i].rollNo == s.rollNo) {
+            printf("Roll number already exists!\n");
+            return;
+        }
+    }
+    
+    printf("Name: ");
+    fgets(s.name, sizeof(s.name), stdin);
+    s.name[strcspn(s.name, "\n")] = '\0';
+    
+    printf("Age: ");
+    scanf("%d", &s.age);
+    getchar();
+    
+    printf("Branch: ");
+    fgets(s.branch, sizeof(s.branch), stdin);
+    s.branch[strcspn(s.branch, "\n")] = '\0';
+    
+    printf("Percentage: ");
+    scanf("%f", &s.percentage);
+    
+    students[*count] = s;
+    (*count)++;
+    printf("✅ Student added successfully!\n");
+}
+
+// Display all students
+void displayStudents(Student students[], int count) {
+    if(count == 0) {
+        printf("No students in database!\n");
+        return;
+    }
+    
+    printf("\n--- Student Records ---\n");
+    printf("============================================================\n");
+    printf("%-10s %-20s %-5s %-15s %-10s\n", 
+           "Roll No", "Name", "Age", "Branch", "Percent");
+    printf("============================================================\n");
+    
+    for(int i = 0; i < count; i++) {
+        printf("%-10d %-20s %-5d %-15s %-10.2f\n", 
+               students[i].rollNo,
+               students[i].name,
+               students[i].age,
+               students[i].branch,
+               students[i].percentage);
+    }
+    printf("============================================================\n");
+    printf("Total Students: %d\n", count);
+}
+
+// Search student by roll number or name
+void searchStudent(Student students[], int count) {
+    if(count == 0) {
+        printf("No students in database!\n");
+        return;
+    }
+    
+    int choice;
+    printf("\n--- Search Student ---\n");
+    printf("1. Search by Roll Number\n");
+    printf("2. Search by Name\n");
+    printf("Enter choice: ");
+    scanf("%d", &choice);
+    getchar();
+    
+    int rollNo;
+    char name[50];
+    int found = 0;
+    
+    if(choice == 1) {
+        printf("Enter Roll Number: ");
+        scanf("%d", &rollNo);
+        
+        for(int i = 0; i < count; i++) {
+            if(students[i].rollNo == rollNo) {
+                printf("\n✅ Student Found!\n");
+                printf("Roll No: %d\n", students[i].rollNo);
+                printf("Name: %s\n", students[i].name);
+                printf("Age: %d\n", students[i].age);
+                printf("Branch: %s\n", students[i].branch);
+                printf("Percentage: %.2f%%\n", students[i].percentage);
+                found = 1;
+                break;
+            }
+        }
+    } else if(choice == 2) {
+        printf("Enter Name: ");
+        fgets(name, sizeof(name), stdin);
+        name[strcspn(name, "\n")] = '\0';
+        
+        for(int i = 0; i < count; i++) {
+            if(strcmp(students[i].name, name) == 0) {
+                printf("\n✅ Student Found!\n");
+                printf("Roll No: %d\n", students[i].rollNo);
+                printf("Name: %s\n", students[i].name);
+                printf("Age: %d\n", students[i].age);
+                printf("Branch: %s\n", students[i].branch);
+                printf("Percentage: %.2f%%\n", students[i].percentage);
+                found = 1;
+            }
+        }
+    } else {
+        printf("Invalid choice!\n");
+        return;
+    }
+    
+    if(!found) {
+        printf("❌ Student not found!\n");
+    }
+}
+
+// Update student details
+void updateStudent(Student students[], int count) {
+    if(count == 0) {
+        printf("No students in database!\n");
+        return;
+    }
+    
+    int rollNo;
+    printf("Enter Roll Number of student to update: ");
+    scanf("%d", &rollNo);
+    getchar();
+    
+    int found = -1;
+    for(int i = 0; i < count; i++) {
+        if(students[i].rollNo == rollNo) {
+            found = i;
+            break;
+        }
+    }
+    
+    if(found == -1) {
+        printf("❌ Student not found!\n");
+        return;
+    }
+    
+    printf("\n--- Update Student (Roll No: %d) ---\n", students[found].rollNo);
+    printf("Current Name: %s\n", students[found].name);
+    printf("New Name (press Enter to keep): ");
+    char newName[50];
+    fgets(newName, sizeof(newName), stdin);
+    if(newName[0] != '\n') {
+        newName[strcspn(newName, "\n")] = '\0';
+        strcpy(students[found].name, newName);
+    }
+    
+    printf("Current Age: %d\n", students[found].age);
+    printf("New Age (0 to keep): ");
+    int age;
+    scanf("%d", &age);
+    if(age > 0) {
+        students[found].age = age;
+    }
+    getchar();
+    
+    printf("Current Branch: %s\n", students[found].branch);
+    printf("New Branch (press Enter to keep): ");
+    char branch[30];
+    fgets(branch, sizeof(branch), stdin);
+    if(branch[0] != '\n') {
+        branch[strcspn(branch, "\n")] = '\0';
+        strcpy(students[found].branch, branch);
+    }
+    
+    printf("Current Percentage: %.2f%%\n", students[found].percentage);
+    printf("New Percentage (-1 to keep): ");
+    float percent;
+    scanf("%f", &percent);
+    if(percent >= 0) {
+        students[found].percentage = percent;
+    }
+    
+    printf("✅ Student details updated!\n");
+}
+
+
+void deleteStudent(Student students[], int *count) {
+    if(*count == 0) {
+        printf("No students in database!\n");
+        return;
+    }
+    
+    int rollNo;
+    printf("Enter Roll Number to delete: ");
+    scanf("%d", &rollNo);
+    
+    int found = -1;
+    for(int i = 0; i < *count; i++) {
+        if(students[i].rollNo == rollNo) {
+            found = i;
+            break;
+        }
+    }
+    
+    if(found == -1) {
+        printf("❌ Student not found!\n");
+        return;
+    }
+    
+    printf("Are you sure you want to delete %s? (y/n): ", students[found].name);
+    char confirm;
+    scanf(" %c", &confirm);
+    
+    if(confirm == 'y' || confirm == 'Y') {
+        for(int i = found; i < *count - 1; i++) {
+            students[i] = students[i + 1];
+        }
+        (*count)--;
+        printf("✅ Student deleted successfully!\n");
+    } else {
+        printf("Deletion cancelled.\n");
+    }
+}
+
+
+void calculateStatistics(Student students[], int count) {
+    if(count == 0) {
+        printf("No students in database!\n");
+        return;
+    }
+    
+    float total = 0;
+    int topperIdx = 0;
+    int failCount = 0;
+    
+    for(int i = 0; i < count; i++) {
+        total += students[i].percentage;
+        if(students[i].percentage > students[topperIdx].percentage) {
+            topperIdx = i;
+        }
+        if(students[i].percentage < 40) {
+            failCount++;
+        }
+    }
+    
+    float average = total / count;
+    
+    printf("\n--- Statistics ---\n");
+    printf("Total Students: %d\n", count);
+    printf("Average Percentage: %.2f%%\n", average);
+    printf("Highest Percentage: %.2f%% (Topper: %s)\n", 
+           students[topperIdx].percentage, students[topperIdx].name);
+    printf("Number of Students with < 40%%: %d\n", failCount);
+    printf("Pass Percentage: %.2f%%\n", (float)(count - failCount) / count * 100);
+}
+
+void sortStudents(Student students[], int count) {
+    if(count <= 1) {
+        printf("Not enough students to sort!\n");
+        return;
+    }
+    
+    int choice;
+    printf("\n--- Sort Students ---\n");
+    printf("1. Sort by Name (Alphabetical)\n");
+    printf("2. Sort by Percentage (Descending)\n");
+    printf("Enter choice: ");
+    scanf("%d", &choice);
+    
+    Student temp;
+    for(int i = 0; i < count - 1; i++) {
+        for(int j = 0; j < count - i - 1; j++) {
+            int swap = 0;
+            if(choice == 1) {
+                if(strcmp(students[j].name, students[j + 1].name) > 0) {
+                    swap = 1;
+                }
+            } else if(choice == 2) {
+                if(students[j].percentage < students[j + 1].percentage) {
+                    swap = 1;
+                }
+            }
+            if(swap) {
+                temp = students[j];
+                students[j] = students[j + 1];
+                students[j + 1] = temp;
+            }
+        }
+    }
+    
+    printf("✅ Students sorted successfully!\n");
+    displayStudents(students, count);
+}
+
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct {
+    int id;
+    char name[50];
+    char designation[30];
+    char department[30];
+    float salary;
+    char joiningDate[15];
+} Employee;
+
+// Function declarations
+void addEmployee(Employee employees[], int *count);
+void displayEmployees(Employee employees[], int count);
+void searchEmployee(Employee employees[], int count);
+void updateEmployee(Employee employees[], int count);
+void deleteEmployee(Employee employees[], int *count);
+void salaryReport(Employee employees[], int count);
+void departmentReport(Employee employees[], int count);
+
+int main() {
+    Employee employees[100];
+    int count = 0;
+    int choice;
+    
+    do {
+        printf("\n=========================================\n");
+        printf("     EMPLOYEE MANAGEMENT SYSTEM          \n");
+        printf("=========================================\n");
+        printf("1. Add Employee\n");
+        printf("2. Display All Employees\n");
+        printf("3. Search Employee\n");
+        printf("4. Update Employee\n");
+        printf("5. Delete Employee\n");
+        printf("6. Salary Report\n");
+        printf("7. Department Report\n");
+        printf("8. Exit\n");
+        printf("=========================================\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        getchar();
+        
+        switch(choice) {
+            case 1:
+                addEmployee(employees, &count);
+                break;
+            case 2:
+                displayEmployees(employees, count);
+                break;
+            case 3:
+                searchEmployee(employees, count);
+                break;
+            case 4:
+                updateEmployee(employees, count);
+                break;
+            case 5:
+                deleteEmployee(employees, &count);
+                break;
+            case 6:
+                salaryReport(employees, count);
+                break;
+            case 7:
+                departmentReport(employees, count);
+                break;
+            case 8:
+                printf("\nExiting system...\n");
+                break;
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while(choice != 8);
+    
+    return 0;
+}
+
+// Add new employee
+void addEmployee(Employee employees[], int *count) {
+    if(*count >= 100) {
+        printf("Database full!\n");
+        return;
+    }
+    
+    Employee e;
+    printf("\n--- Add Employee ---\n");
+    printf("Employee ID: ");
+    scanf("%d", &e.id);
+    getchar();
+    
+    // Check for duplicate ID
+    for(int i = 0; i < *count; i++) {
+        if(employees[i].id == e.id) {
+            printf("Employee ID already exists!\n");
+            return;
+        }
+    }
+    
+    printf("Name: ");
+    fgets(e.name, sizeof(e.name), stdin);
+    e.name[strcspn(e.name, "\n")] = '\0';
+    
+    printf("Designation: ");
+    fgets(e.designation, sizeof(e.designation), stdin);
+    e.designation[strcspn(e.designation, "\n")] = '\0';
+    
+    printf("Department: ");
+    fgets(e.department, sizeof(e.department), stdin);
+    e.department[strcspn(e.department, "\n")] = '\0';
+    
+    printf("Salary: ₹");
+    scanf("%f", &e.salary);
+    getchar();
+    
+    printf("Joining Date (DD/MM/YYYY): ");
+    fgets(e.joiningDate, sizeof(e.joiningDate), stdin);
+    e.joiningDate[strcspn(e.joiningDate, "\n")] = '\0';
+    
+    employees[*count] = e;
+    (*count)++;
+    printf("✅ Employee added successfully!\n");
+}
+
+// Display all employees
+void displayEmployees(Employee employees[], int count) {
+    if(count == 0) {
+        printf("No employees in database!\n");
+        return;
+    }
+    
+    printf("\n--- Employee Records ---\n");
+    printf("================================================================================\n");
+    printf("%-6s %-20s %-15s %-15s %-12s %-12s\n", 
+           "ID", "Name", "Designation", "Department", "Salary", "Joining");
+    printf("================================================================================\n");
+    
+    for(int i = 0; i < count; i++) {
+        printf("%-6d %-20s %-15s %-15s ₹%-11.2f %-12s\n", 
+               employees[i].id,
+               employees[i].name,
+               employees[i].designation,
+               employees[i].department,
+               employees[i].salary,
+               employees[i].joiningDate);
+    }
+    printf("================================================================================\n");
+    printf("Total Employees: %d\n", count);
+}
+
+// Search employee
+void searchEmployee(Employee employees[], int count) {
+    if(count == 0) {
+        printf("No employees in database!\n");
+        return;
+    }
+    
+    int id;
+    printf("Enter Employee ID to search: ");
+    scanf("%d", &id);
+    
+    for(int i = 0; i < count; i++) {
+        if(employees[i].id == id) {
+            printf("\n✅ Employee Found!\n");
+            printf("ID: %d\n", employees[i].id);
+            printf("Name: %s\n", employees[i].name);
+            printf("Designation: %s\n", employees[i].designation);
+            printf("Department: %s\n", employees[i].department);
+            printf("Salary: ₹%.2f\n", employees[i].salary);
+            printf("Joining Date: %s\n", employees[i].joiningDate);
+            return;
+        }
+    }
+    printf("❌ Employee not found!\n");
+}
+
+// Update employee
+void updateEmployee(Employee employees[], int count) {
+    if(count == 0) {
+        printf("No employees in database!\n");
+        return;
+    }
+    
+    int id;
+    printf("Enter Employee ID to update: ");
+    scanf("%d", &id);
+    getchar();
+    
+    int found = -1;
+    for(int i = 0; i < count; i++) {
+        if(employees[i].id == id) {
+            found = i;
+            break;
+        }
+    }
+    
+    if(found == -1) {
+        printf("❌ Employee not found!\n");
+        return;
+    }
+    
+    printf("\n--- Update Employee (ID: %d) ---\n", employees[found].id);
+    printf("Current Name: %s\n", employees[found].name);
+    printf("New Name (press Enter to keep): ");
+    char newName[50];
+    fgets(newName, sizeof(newName), stdin);
+    if(newName[0] != '\n') {
+        newName[strcspn(newName, "\n")] = '\0';
+        strcpy(employees[found].name, newName);
+    }
+    
+    printf("Current Designation: %s\n", employees[found].designation);
+    printf("New Designation (press Enter to keep): ");
+    char desig[30];
+    fgets(desig, sizeof(desig), stdin);
+    if(desig[0] != '\n') {
+        desig[strcspn(desig, "\n")] = '\0';
+        strcpy(employees[found].designation, desig);
+    }
+    
+    printf("Current Salary: ₹%.2f\n", employees[found].salary);
+    printf("New Salary (-1 to keep): ");
+    float salary;
+    scanf("%f", &salary);
+    if(salary >= 0) {
+        employees[found].salary = salary;
+    }
+    getchar();
+    
+    printf("✅ Employee details updated!\n");
+}
+
+// Delete employee
+void deleteEmployee(Employee employees[], int *count) {
+    if(*count == 0) {
+        printf("No employees in database!\n");
+        return;
+    }
+    
+    int id;
+    printf("Enter Employee ID to delete: ");
+    scanf("%d", &id);
+    
+    int found = -1;
+    for(int i = 0; i < *count; i++) {
+        if(employees[i].id == id) {
+            found = i;
+            break;
+        }
+    }
+    
+    if(found == -1) {
+        printf("❌ Employee not found!\n");
+        return;
+    }
+    
+    printf("Are you sure you want to delete %s? (y/n): ", employees[found].name);
+    char confirm;
+    scanf(" %c", &confirm);
+    
+    if(confirm == 'y' || confirm == 'Y') {
+        for(int i = found; i < *count - 1; i++) {
+            employees[i] = employees[i + 1];
+        }
+        (*count)--;
+        printf("✅ Employee deleted successfully!\n");
+    } else {
+        printf("Deletion cancelled.\n");
+    }
+}
+
+// Salary report
+void salaryReport(Employee employees[], int count) {
+    if(count == 0) {
+        printf("No employees in database!\n");
+        return;
+    }
+    
+    float total = 0;
+    int highEarner = 0;
+    float maxSalary = employees[0].salary;
+    
+    for(int i = 0; i < count; i++) {
+        total += employees[i].salary;
+        if(employees[i].salary > maxSalary) {
+            maxSalary = employees[i].salary;
+            highEarner = i;
+        }
+    }
+    
+    printf("\n--- Salary Report ---\n");
+    printf("Total Employees: %d\n", count);
+    printf("Total Salary Budget: ₹%.2f\n", total);
+    printf("Average Salary: ₹%.2f\n", total / count);
+    printf("Highest Salary: ₹%.2f (Employee: %s)\n", 
+           employees[highEarner].salary, employees[highEarner].name);
+    printf("Lowest Salary: ₹%.2f (Employee: %s)\n", 
+           employees[0].salary, employees[0].name);
+}
+
+// Department report
+void departmentReport(Employee employees[], int count) {
+    if(count == 0) {
+        printf("No employees in database!\n");
+        return;
+    }
+    
+    char depts[20][30];
+    int deptCount = 0;
+    int deptTotal[20] = {0};
+    float deptSalary[20] = {0};
+    
+    // Find unique departments
+    for(int i = 0; i < count; i++) {
+        int found = -1;
+        for(int j = 0; j < deptCount; j++) {
+            if(strcmp(employees[i].department, depts[j]) == 0) {
+                found = j;
+                break;
+            }
+        }
+        if(found == -1) {
+            strcpy(depts[deptCount], employees[i].department);
+            deptTotal[deptCount] = 1;
+            deptSalary[deptCount] = employees[i].salary;
+            deptCount++;
+        } else {
+            deptTotal[found]++;
+            deptSalary[found] += employees[i].salary;
+        }
+    }
+    
+    printf("\n--- Department Report ---\n");
+    printf("=================================================================\n");
+    printf("%-20s %-10s %-15s %-15s\n", 
+           "Department", "Employees", "Total Salary", "Avg Salary");
+    printf("=================================================================\n");
+    
+    for(int i = 0; i < deptCount; i++) {
+        printf("%-20s %-10d ₹%-14.2f ₹%-14.2f\n", 
+               depts[i], deptTotal[i], deptSalary[i], deptSalary[i] / deptTotal[i]);
+    }
+    printf("=================================================================\n");
+}
+
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct {
+    int empId;
+    char name[50];
+    char designation[30];
+    float basicSalary;
+    float da;      // Dearness Allowance
+    float hra;     // House Rent Allowance
+    float pf;      // Provident Fund
+    float tax;
+    float grossSalary;
+    float netSalary;
+} Employee;
+
+// Function declarations
+void addEmployee(Employee employees[], int *count);
+void displayEmployees(Employee employees[], int count);
+void calculateSalary(Employee *e);
+void displaySalary(Employee employees[], int count);
+void searchEmployee(Employee employees[], int count);
+void generatePayroll(Employee employees[], int count);
+void updateEmployee(Employee employees[], int count);
+
+int main() {
+    Employee employees[100];
+    int count = 0;
+    int choice;
+    
+    do {
+        printf("\n=========================================\n");
+        printf("        SALARY MANAGEMENT SYSTEM         \n");
+        printf("=========================================\n");
+        printf("1. Add Employee\n");
+        printf("2. Display All Employees\n");
+        printf("3. Calculate Salary\n");
+        printf("4. Display Salary Details\n");
+        printf("5. Search Employee\n");
+        printf("6. Generate Payroll\n");
+        printf("7. Update Employee\n");
+        printf("8. Exit\n");
+        printf("=========================================\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        getchar();
+        
+        switch(choice) {
+            case 1:
+                addEmployee(employees, &count);
+                break;
+            case 2:
+                displayEmployees(employees, count);
+                break;
+            case 3:
+                for(int i = 0; i < count; i++) {
+                    calculateSalary(&employees[i]);
+                }
+                printf("✅ Salaries calculated for all employees!\n");
+                break;
+            case 4:
+                displaySalary(employees, count);
+                break;
+            case 5:
+                searchEmployee(employees, count);
+                break;
+            case 6:
+                generatePayroll(employees, count);
+                break;
+            case 7:
+                updateEmployee(employees, count);
+                break;
+            case 8:
+                printf("\nExiting system...\n");
+                break;
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while(choice != 8);
+    
+    return 0;
+}
+
+// Calculate salary components
+void calculateSalary(Employee *e) {
+    // DA = 50% of basic
+    e->da = e->basicSalary * 0.50;
+    
+    // HRA = 20% of basic
+    e->hra = e->basicSalary * 0.20;
+    
+    // PF = 12% of basic
+    e->pf = e->basicSalary * 0.12;
+    
+    // Tax calculation (simplified)
+    float annual = e->basicSalary * 12;
+    if(annual <= 250000) {
+        e->tax = 0;
+    } else if(annual <= 500000) {
+        e->tax = (annual - 250000) * 0.05 / 12;
+    } else if(annual <= 1000000) {
+        e->tax = (12500 + (annual - 500000) * 0.20) / 12;
+    } else {
+        e->tax = (112500 + (annual - 1000000) * 0.30) / 12;
+    }
+    
+    // Gross Salary = Basic + DA + HRA
+    e->grossSalary = e->basicSalary + e->da + e->hra;
+    
+    // Net Salary = Gross - PF - Tax
+    e->netSalary = e->grossSalary - e->pf - e->tax;
+}
+
+// Add new employee
+void addEmployee(Employee employees[], int *count) {
+    if(*count >= 100) {
+        printf("Database full!\n");
+        return;
+    }
+    
+    Employee e;
+    printf("\n--- Add Employee ---\n");
+    printf("Employee ID: ");
+    scanf("%d", &e.empId);
+    getchar();
+    
+    
+    for(int i = 0; i < *count; i++) {
+        if(employees[i].empId == e.empId) {
+            printf("Employee ID already exists!\n");
+            return;
+        }
+    }
+    
+    printf("Name: ");
+    fgets(e.name, sizeof(e.name), stdin);
+    e.name[strcspn(e.name, "\n")] = '\0';
+    
+    printf("Designation: ");
+    fgets(e.designation, sizeof(e.designation), stdin);
+    e.designation[strcspn(e.designation, "\n")] = '\0';
+    
+    printf("Basic Salary: ₹");
+    scanf("%f", &e.basicSalary);
+    
+    // Initialize other fields
+    e.da = 0;
+    e.hra = 0;
+    e.pf = 0;
+    e.tax = 0;
+    e.grossSalary = 0;
+    e.netSalary = 0;
+    
+    employees[*count] = e;
+    (*count)++;
+    printf("✅ Employee added successfully!\n");
+}
+
+
+void displayEmployees(Employee employees[], int count) {
+    if(count == 0) {
+        printf("No employees in database!\n");
+        return;
+    }
+    
+    printf("\n--- Employee Records ---\n");
+    printf("============================================================\n");
+    printf("%-6s %-20s %-15s %-12s\n", 
+           "ID", "Name", "Designation", "Basic Salary");
+    printf("============================================================\n");
+    
+    for(int i = 0; i < count; i++) {
+        printf("%-6d %-20s %-15s ₹%-11.2f\n", 
+               employees[i].empId,
+               employees[i].name,
+               employees[i].designation,
+               employees[i].basicSalary);
+    }
+    printf("============================================================\n");
+    printf("Total Employees: %d\n", count);
+}
+
+
+void displaySalary(Employee employees[], int count) {
+    if(count == 0) {
+        printf("No employees in database!\n");
+        return;
+    }
+    
+    printf("\n--- Salary Details ---\n");
+    printf("====================================================================================\n");
+    printf("%-6s %-12s %-12s %-12s %-10s %-10s %-12s %-12s\n", 
+           "ID", "Basic", "DA", "HRA", "PF", "Tax", "Gross", "Net");
+    printf("====================================================================================\n");
+    
+    float totalGross = 0, totalNet = 0;
+    for(int i = 0; i < count; i++) {
+        printf("%-6d ₹%-10.2f ₹%-10.2f ₹%-10.2f ₹%-8.2f ₹%-8.2f ₹%-10.2f ₹%-10.2f\n", 
+               employees[i].empId,
+               employees[i].basicSalary,
+               employees[i].da,
+               employees[i].hra,
+               employees[i].pf,
+               employees[i].tax,
+               employees[i].grossSalary,
+               employees[i].netSalary);
+        totalGross += employees[i].grossSalary;
+        totalNet += employees[i].netSalary;
+    }
+    printf("====================================================================================\n");
+    printf("Total Gross Salary: ₹%.2f\n", totalGross);
+    printf("Total Net Salary: ₹%.2f\n", totalNet);
+    printf("====================================================================================\n");
+}
+
+
+void searchEmployee(Employee employees[], int count) {
+    if(count == 0) {
+        printf("No employees in database!\n");
+        return;
+    }
+    
+    int id;
+    printf("Enter Employee ID: ");
+    scanf("%d", &id);
+    
+    for(int i = 0; i < count; i++) {
+        if(employees[i].empId == id) {
+            printf("\n✅ Employee Found!\n");
+            printf("ID: %d\n", employees[i].empId);
+            printf("Name: %s\n", employees[i].name);
+            printf("Designation: %s\n", employees[i].designation);
+            printf("Basic Salary: ₹%.2f\n", employees[i].basicSalary);
+            printf("DA: ₹%.2f\n", employees[i].da);
+            printf("HRA: ₹%.2f\n", employees[i].hra);
+            printf("PF: ₹%.2f\n", employees[i].pf);
+            printf("Tax: ₹%.2f\n", employees[i].tax);
+            printf("Gross Salary: ₹%.2f\n", employees[i].grossSalary);
+            printf("Net Salary: ₹%.2f\n", employees[i].netSalary);
+            return;
+        }
+    }
+    printf("❌ Employee not found!\n");
+}
+
+
+void generatePayroll(Employee employees[], int count) {
+    if(count == 0) {
+        printf("No employees in database!\n");
+        return;
+    }
+    
+    printf("\n=========================================\n");
+    printf("           PAYROLL GENERATION            \n");
+    printf("=========================================\n");
+    printf("Date: %s\n", __DATE__);
+    printf("=========================================\n");
+    printf("%-6s %-15s %-12s %-12s\n", 
+           "ID", "Name", "Gross", "Net");
+    printf("=========================================\n");
+    
+    float totalGross = 0, totalNet = 0;
+    for(int i = 0; i < count; i++) {
+        printf("%-6d %-15s ₹%-10.2f ₹%-10.2f\n", 
+               employees[i].empId,
+               employees[i].name,
+               employees[i].grossSalary,
+               employees[i].netSalary);
+        totalGross += employees[i].grossSalary;
+        totalNet += employees[i].netSalary;
+    }
+    printf("=========================================\n");
+    printf("Total Gross: ₹%.2f\n", totalGross);
+    printf("Total Net: ₹%.2f\n", totalNet);
+    printf("=========================================\n");
+    printf("✅ Payroll generated successfully!\n");
+}
+
+
+void updateEmployee(Employee employees[], int count) {
+    if(count == 0) {
+        printf("No employees in database!\n");
+        return;
+    }
+    
+    int id;
+    printf("Enter Employee ID to update: ");
+    scanf("%d", &id);
+    getchar();
+    
+    int found = -1;
+    for(int i = 0; i < count; i++) {
+        if(employees[i].empId == id) {
+            found = i;
+            break;
+        }
+    }
+    
+    if(found == -1) {
+        printf("❌ Employee not found!\n");
+        return;
+    }
+    
+    printf("\n--- Update Employee (ID: %d) ---\n", employees[found].empId);
+    printf("Current Name: %s\n", employees[found].name);
+    printf("New Name (press Enter to keep): ");
+    char newName[50];
+    fgets(newName, sizeof(newName), stdin);
+    if(newName[0] != '\n') {
+        newName[strcspn(newName, "\n")] = '\0';
+        strcpy(employees[found].name, newName);
+    }
+    
+    printf("Current Basic Salary: ₹%.2f\n", employees[found].basicSalary);
+    printf("New Basic Salary (-1 to keep): ");
+    float salary;
+    scanf("%f", &salary);
+    if(salary >= 0) {
+        employees[found].basicSalary = salary;
+        // Recalculate salary
+        calculateSalary(&employees[found]);
+    }
+    
+    printf("✅ Employee details updated!\n");
+}
