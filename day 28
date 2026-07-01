@@ -1,0 +1,1592 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct {
+    int id;
+    char title[100];
+    char author[50];
+    char publisher[50];
+    int year;
+    int quantity;
+    int available;
+    int issuedCount;
+} Book;
+
+typedef struct {
+    int bookId;
+    char studentName[50];
+    char issueDate[15];
+    char returnDate[15];
+    int issued;
+} Transaction;
+
+// Function declarations
+void addBook(Book books[], int *bookCount);
+void displayBooks(Book books[], int bookCount);
+void searchBook(Book books[], int bookCount);
+void issueBook(Book books[], int bookCount, Transaction transactions[], int *transCount);
+void returnBook(Book books[], int bookCount, Transaction transactions[], int *transCount);
+void displayTransactions(Transaction transactions[], int transCount);
+void displayAvailableBooks(Book books[], int bookCount);
+void updateBook(Book books[], int bookCount);
+void deleteBook(Book books[], int *bookCount);
+
+int main() {
+    Book books[100];
+    Transaction transactions[500];
+    int bookCount = 0;
+    int transCount = 0;
+    int choice;
+    
+    do {
+        printf("\n=========================================\n");
+        printf("        LIBRARY MANAGEMENT SYSTEM        \n");
+        printf("=========================================\n");
+        printf("1. Add Book\n");
+        printf("2. Display All Books\n");
+        printf("3. Search Book\n");
+        printf("4. Issue Book\n");
+        printf("5. Return Book\n");
+        printf("6. View Transactions\n");
+        printf("7. View Available Books\n");
+        printf("8. Update Book\n");
+        printf("9. Delete Book\n");
+        printf("10. Exit\n");
+        printf("=========================================\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        getchar();
+        
+        switch(choice) {
+            case 1:
+                addBook(books, &bookCount);
+                break;
+            case 2:
+                displayBooks(books, bookCount);
+                break;
+            case 3:
+                searchBook(books, bookCount);
+                break;
+            case 4:
+                issueBook(books, bookCount, transactions, &transCount);
+                break;
+            case 5:
+                returnBook(books, bookCount, transactions, &transCount);
+                break;
+            case 6:
+                displayTransactions(transactions, transCount);
+                break;
+            case 7:
+                displayAvailableBooks(books, bookCount);
+                break;
+            case 8:
+                updateBook(books, bookCount);
+                break;
+            case 9:
+                deleteBook(books, &bookCount);
+                break;
+            case 10:
+                printf("\nExiting system...\n");
+                break;
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while(choice != 10);
+    
+    return 0;
+}
+
+// Add new book
+void addBook(Book books[], int *bookCount) {
+    if(*bookCount >= 100) {
+        printf("Database full!\n");
+        return;
+    }
+    
+    Book b;
+    printf("\n--- Add Book ---\n");
+    printf("Book ID: ");
+    scanf("%d", &b.id);
+    getchar();
+    
+    // Check for duplicate ID
+    for(int i = 0; i < *bookCount; i++) {
+        if(books[i].id == b.id) {
+            printf("Book ID already exists!\n");
+            return;
+        }
+    }
+    
+    printf("Title: ");
+    fgets(b.title, sizeof(b.title), stdin);
+    b.title[strcspn(b.title, "\n")] = '\0';
+    
+    printf("Author: ");
+    fgets(b.author, sizeof(b.author), stdin);
+    b.author[strcspn(b.author, "\n")] = '\0';
+    
+    printf("Publisher: ");
+    fgets(b.publisher, sizeof(b.publisher), stdin);
+    b.publisher[strcspn(b.publisher, "\n")] = '\0';
+    
+    printf("Publication Year: ");
+    scanf("%d", &b.year);
+    
+    printf("Quantity: ");
+    scanf("%d", &b.quantity);
+    
+    b.available = b.quantity;
+    b.issuedCount = 0;
+    
+    books[*bookCount] = b;
+    (*bookCount)++;
+    printf("✅ Book added successfully!\n");
+}
+
+// Display all books
+void displayBooks(Book books[], int bookCount) {
+    if(bookCount == 0) {
+        printf("No books in library!\n");
+        return;
+    }
+    
+    printf("\n--- Library Books ---\n");
+    printf("================================================================================\n");
+    printf("%-6s %-30s %-20s %-15s %-6s %-10s %-8s\n", 
+           "ID", "Title", "Author", "Publisher", "Year", "Available", "Issued");
+    printf("================================================================================\n");
+    
+    for(int i = 0; i < bookCount; i++) {
+        printf("%-6d %-30s %-20s %-15s %-6d %-10d %-8d\n", 
+               books[i].id,
+               books[i].title,
+               books[i].author,
+               books[i].publisher,
+               books[i].year,
+               books[i].available,
+               books[i].issuedCount);
+    }
+    printf("================================================================================\n");
+    printf("Total Books: %d\n", bookCount);
+}
+
+// Search book
+void searchBook(Book books[], int bookCount) {
+    if(bookCount == 0) {
+        printf("No books in library!\n");
+        return;
+    }
+    
+    int choice;
+    printf("\n--- Search Book ---\n");
+    printf("1. Search by ID\n");
+    printf("2. Search by Title\n");
+    printf("3. Search by Author\n");
+    printf("Enter choice: ");
+    scanf("%d", &choice);
+    getchar();
+    
+    int id;
+    char searchStr[100];
+    int found = 0;
+    
+    if(choice == 1) {
+        printf("Enter Book ID: ");
+        scanf("%d", &id);
+        
+        for(int i = 0; i < bookCount; i++) {
+            if(books[i].id == id) {
+                printf("\n✅ Book Found!\n");
+                printf("ID: %d\n", books[i].id);
+                printf("Title: %s\n", books[i].title);
+                printf("Author: %s\n", books[i].author);
+                printf("Publisher: %s\n", books[i].publisher);
+                printf("Year: %d\n", books[i].year);
+                printf("Available: %d\n", books[i].available);
+                printf("Issued: %d\n", books[i].issuedCount);
+                found = 1;
+                break;
+            }
+        }
+    } else if(choice == 2) {
+        printf("Enter Title: ");
+        fgets(searchStr, sizeof(searchStr), stdin);
+        searchStr[strcspn(searchStr, "\n")] = '\0';
+        
+        for(int i = 0; i < bookCount; i++) {
+            if(strstr(books[i].title, searchStr) != NULL) {
+                printf("\n✅ Book Found!\n");
+                printf("ID: %d, Title: %s, Author: %s, Available: %d\n", 
+                       books[i].id, books[i].title, books[i].author, books[i].available);
+                found = 1;
+            }
+        }
+    } else if(choice == 3) {
+        printf("Enter Author: ");
+        fgets(searchStr, sizeof(searchStr), stdin);
+        searchStr[strcspn(searchStr, "\n")] = '\0';
+        
+        for(int i = 0; i < bookCount; i++) {
+            if(strstr(books[i].author, searchStr) != NULL) {
+                printf("\n✅ Book Found!\n");
+                printf("ID: %d, Title: %s, Author: %s, Available: %d\n", 
+                       books[i].id, books[i].title, books[i].author, books[i].available);
+                found = 1;
+            }
+        }
+    } else {
+        printf("Invalid choice!\n");
+        return;
+    }
+    
+    if(!found) {
+        printf("❌ Book not found!\n");
+    }
+}
+
+// Issue book
+void issueBook(Book books[], int bookCount, Transaction transactions[], int *transCount) {
+    if(bookCount == 0) {
+        printf("No books in library!\n");
+        return;
+    }
+    
+    int id;
+    printf("Enter Book ID to issue: ");
+    scanf("%d", &id);
+    getchar();
+    
+    int found = -1;
+    for(int i = 0; i < bookCount; i++) {
+        if(books[i].id == id) {
+            found = i;
+            break;
+        }
+    }
+    
+    if(found == -1) {
+        printf("❌ Book not found!\n");
+        return;
+    }
+    
+    if(books[found].available <= 0) {
+        printf("❌ Book is not available! All copies are issued.\n");
+        return;
+    }
+    
+    Transaction t;
+    t.bookId = id;
+    printf("Student Name: ");
+    fgets(t.studentName, sizeof(t.studentName), stdin);
+    t.studentName[strcspn(t.studentName, "\n")] = '\0';
+    
+    printf("Issue Date (DD/MM/YYYY): ");
+    fgets(t.issueDate, sizeof(t.issueDate), stdin);
+    t.issueDate[strcspn(t.issueDate, "\n")] = '\0';
+    
+    printf("Return Date (DD/MM/YYYY): ");
+    fgets(t.returnDate, sizeof(t.returnDate), stdin);
+    t.returnDate[strcspn(t.returnDate, "\n")] = '\0';
+    
+    t.issued = 1;
+    
+    transactions[*transCount] = t;
+    (*transCount)++;
+    
+    books[found].available--;
+    books[found].issuedCount++;
+    
+    printf("✅ Book issued successfully!\n");
+    printf("   Book: %s\n", books[found].title);
+    printf("   Student: %s\n", t.studentName);
+    printf("   Return Date: %s\n", t.returnDate);
+}
+
+// Return book
+void returnBook(Book books[], int bookCount, Transaction transactions[], int *transCount) {
+    if(*transCount == 0) {
+        printf("No transactions found!\n");
+        return;
+    }
+    
+    int id;
+    printf("Enter Book ID to return: ");
+    scanf("%d", &id);
+    getchar();
+    
+    int found = -1;
+    for(int i = 0; i < *transCount; i++) {
+        if(transactions[i].bookId == id && transactions[i].issued == 1) {
+            found = i;
+            break;
+        }
+    }
+    
+    if(found == -1) {
+        printf("❌ No issued record found for this book!\n");
+        return;
+    }
+    
+    // Find book and update
+    for(int i = 0; i < bookCount; i++) {
+        if(books[i].id == id) {
+            books[i].available++;
+            break;
+        }
+    }
+    
+    transactions[found].issued = 0;
+    printf("✅ Book returned successfully!\n");
+}
+
+// Display transactions
+void displayTransactions(Transaction transactions[], int transCount) {
+    if(transCount == 0) {
+        printf("No transactions!\n");
+        return;
+    }
+    
+    printf("\n--- Transactions ---\n");
+    printf("================================================================================\n");
+    printf("%-8s %-20s %-15s %-15s %-10s\n", 
+           "Book ID", "Student Name", "Issue Date", "Return Date", "Status");
+    printf("================================================================================\n");
+    
+    for(int i = 0; i < transCount; i++) {
+        printf("%-8d %-20s %-15s %-15s %-10s\n", 
+               transactions[i].bookId,
+               transactions[i].studentName,
+               transactions[i].issueDate,
+               transactions[i].returnDate,
+               transactions[i].issued ? "Issued" : "Returned");
+    }
+    printf("================================================================================\n");
+}
+
+// Display available books
+void displayAvailableBooks(Book books[], int bookCount) {
+    if(bookCount == 0) {
+        printf("No books in library!\n");
+        return;
+    }
+    
+    printf("\n--- Available Books ---\n");
+    printf("================================================================================\n");
+    printf("%-6s %-30s %-20s %-10s\n", 
+           "ID", "Title", "Author", "Available");
+    printf("================================================================================\n");
+    
+    int availableCount = 0;
+    for(int i = 0; i < bookCount; i++) {
+        if(books[i].available > 0) {
+            printf("%-6d %-30s %-20s %-10d\n", 
+                   books[i].id,
+                   books[i].title,
+                   books[i].author,
+                   books[i].available);
+            availableCount++;
+        }
+    }
+    
+    if(availableCount == 0) {
+        printf("No books available at the moment!\n");
+    }
+    printf("================================================================================\n");
+    printf("Available Books: %d\n", availableCount);
+}
+
+// Update book
+void updateBook(Book books[], int bookCount) {
+    if(bookCount == 0) {
+        printf("No books in library!\n");
+        return;
+    }
+    
+    int id;
+    printf("Enter Book ID to update: ");
+    scanf("%d", &id);
+    getchar();
+    
+    int found = -1;
+    for(int i = 0; i < bookCount; i++) {
+        if(books[i].id == id) {
+            found = i;
+            break;
+        }
+    }
+    
+    if(found == -1) {
+        printf("❌ Book not found!\n");
+        return;
+    }
+    
+    printf("\n--- Update Book (ID: %d) ---\n", books[found].id);
+    printf("Current Title: %s\n", books[found].title);
+    printf("New Title (press Enter to keep): ");
+    char newTitle[100];
+    fgets(newTitle, sizeof(newTitle), stdin);
+    if(newTitle[0] != '\n') {
+        newTitle[strcspn(newTitle, "\n")] = '\0';
+        strcpy(books[found].title, newTitle);
+    }
+    
+    printf("Current Quantity: %d\n", books[found].quantity);
+    printf("New Quantity (-1 to keep): ");
+    int qty;
+    scanf("%d", &qty);
+    if(qty >= 0) {
+        int diff = qty - books[found].quantity;
+        books[found].quantity = qty;
+        books[found].available += diff;
+    }
+    
+    printf("✅ Book updated successfully!\n");
+}
+
+// Delete book
+void deleteBook(Book books[], int *bookCount) {
+    if(*bookCount == 0) {
+        printf("No books in library!\n");
+        return;
+    }
+    
+    int id;
+    printf("Enter Book ID to delete: ");
+    scanf("%d", &id);
+    
+    int found = -1;
+    for(int i = 0; i < *bookCount; i++) {
+        if(books[i].id == id) {
+            found = i;
+            break;
+        }
+    }
+    
+    if(found == -1) {
+        printf("❌ Book not found!\n");
+        return;
+    }
+    
+    printf("Are you sure you want to delete '%s'? (y/n): ", books[found].title);
+    char confirm;
+    scanf(" %c", &confirm);
+    
+    if(confirm == 'y' || confirm == 'Y') {
+        for(int i = found; i < *bookCount - 1; i++) {
+            books[i] = books[i + 1];
+        }
+        (*bookCount)--;
+        printf("✅ Book deleted successfully!\n");
+    } else {
+        printf("Deletion cancelled.\n");
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct {
+    int accountNo;
+    char name[50];
+    char accountType[20];
+    float balance;
+    char phone[15];
+    char address[100];
+    int transactions[100];
+    float transactionAmounts[100];
+    int transCount;
+} Account;
+
+// Function declarations
+void createAccount(Account accounts[], int *count);
+void deposit(Account accounts[], int count);
+void withdraw(Account accounts[], int count);
+void checkBalance(Account accounts[], int count);
+void viewStatement(Account accounts[], int count);
+void transferMoney(Account accounts[], int count);
+void searchAccount(Account accounts[], int count);
+void displayAllAccounts(Account accounts[], int count);
+
+int main() {
+    Account accounts[100];
+    int count = 0;
+    int choice;
+    
+    do {
+        printf("\n=========================================\n");
+        printf("         BANK ACCOUNT SYSTEM             \n");
+        printf("=========================================\n");
+        printf("1. Create Account\n");
+        printf("2. Deposit Money\n");
+        printf("3. Withdraw Money\n");
+        printf("4. Check Balance\n");
+        printf("5. View Statement\n");
+        printf("6. Transfer Money\n");
+        printf("7. Search Account\n");
+        printf("8. Display All Accounts\n");
+        printf("9. Exit\n");
+        printf("=========================================\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        getchar();
+        
+        switch(choice) {
+            case 1:
+                createAccount(accounts, &count);
+                break;
+            case 2:
+                deposit(accounts, count);
+                break;
+            case 3:
+                withdraw(accounts, count);
+                break;
+            case 4:
+                checkBalance(accounts, count);
+                break;
+            case 5:
+                viewStatement(accounts, count);
+                break;
+            case 6:
+                transferMoney(accounts, count);
+                break;
+            case 7:
+                searchAccount(accounts, count);
+                break;
+            case 8:
+                displayAllAccounts(accounts, count);
+                break;
+            case 9:
+                printf("\nThank you for using Bank System!\n");
+                break;
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while(choice != 9);
+    
+    return 0;
+}
+
+// Create new account
+void createAccount(Account accounts[], int *count) {
+    if(*count >= 100) {
+        printf("Database full!\n");
+        return;
+    }
+    
+    Account acc;
+    printf("\n--- Create Account ---\n");
+    printf("Account Number: ");
+    scanf("%d", &acc.accountNo);
+    getchar();
+    
+    // Check for duplicate account number
+    for(int i = 0; i < *count; i++) {
+        if(accounts[i].accountNo == acc.accountNo) {
+            printf("Account number already exists!\n");
+            return;
+        }
+    }
+    
+    printf("Account Holder Name: ");
+    fgets(acc.name, sizeof(acc.name), stdin);
+    acc.name[strcspn(acc.name, "\n")] = '\0';
+    
+    printf("Account Type (Savings/Current): ");
+    fgets(acc.accountType, sizeof(acc.accountType), stdin);
+    acc.accountType[strcspn(acc.accountType, "\n")] = '\0';
+    
+    printf("Initial Deposit: ₹");
+    scanf("%f", &acc.balance);
+    getchar();
+    
+    printf("Phone Number: ");
+    fgets(acc.phone, sizeof(acc.phone), stdin);
+    acc.phone[strcspn(acc.phone, "\n")] = '\0';
+    
+    printf("Address: ");
+    fgets(acc.address, sizeof(acc.address), stdin);
+    acc.address[strcspn(acc.address, "\n")] = '\0';
+    
+    acc.transCount = 0;
+    acc.transactions[acc.transCount] = 1; // 1 for deposit
+    acc.transactionAmounts[acc.transCount] = acc.balance;
+    acc.transCount++;
+    
+    accounts[*count] = acc;
+    (*count)++;
+    printf("✅ Account created successfully!\n");
+    printf("   Account Number: %d\n", acc.accountNo);
+    printf("   Initial Balance: ₹%.2f\n", acc.balance);
+}
+
+// Deposit money
+void deposit(Account accounts[], int count) {
+    int accNo;
+    float amount;
+    
+    printf("Enter Account Number: ");
+    scanf("%d", &accNo);
+    
+    for(int i = 0; i < count; i++) {
+        if(accounts[i].accountNo == accNo) {
+            printf("Current Balance: ₹%.2f\n", accounts[i].balance);
+            printf("Enter amount to deposit: ₹");
+            scanf("%f", &amount);
+            
+            if(amount <= 0) {
+                printf("Invalid amount!\n");
+                return;
+            }
+            
+            accounts[i].balance += amount;
+            
+            // Record transaction
+            accounts[i].transactions[accounts[i].transCount] = 1; // Deposit
+            accounts[i].transactionAmounts[accounts[i].transCount] = amount;
+            accounts[i].transCount++;
+            
+            printf("✅ ₹%.2f deposited successfully!\n", amount);
+            printf("   New Balance: ₹%.2f\n", accounts[i].balance);
+            return;
+        }
+    }
+    printf("❌ Account not found!\n");
+}
+
+// Withdraw money
+void withdraw(Account accounts[], int count) {
+    int accNo;
+    float amount;
+    
+    printf("Enter Account Number: ");
+    scanf("%d", &accNo);
+    
+    for(int i = 0; i < count; i++) {
+        if(accounts[i].accountNo == accNo) {
+            printf("Current Balance: ₹%.2f\n", accounts[i].balance);
+            printf("Enter amount to withdraw: ₹");
+            scanf("%f", &amount);
+            
+            if(amount <= 0) {
+                printf("Invalid amount!\n");
+                return;
+            }
+            
+            if(amount > accounts[i].balance) {
+                printf("❌ Insufficient balance!\n");
+                return;
+            }
+            
+            accounts[i].balance -= amount;
+            
+            // Record transaction
+            accounts[i].transactions[accounts[i].transCount] = 0; // Withdrawal
+            accounts[i].transactionAmounts[accounts[i].transCount] = amount;
+            accounts[i].transCount++;
+            
+            printf("✅ ₹%.2f withdrawn successfully!\n", amount);
+            printf("   New Balance: ₹%.2f\n", accounts[i].balance);
+            return;
+        }
+    }
+    printf("❌ Account not found!\n");
+}
+
+// Check balance
+void checkBalance(Account accounts[], int count) {
+    int accNo;
+    
+    printf("Enter Account Number: ");
+    scanf("%d", &accNo);
+    
+    for(int i = 0; i < count; i++) {
+        if(accounts[i].accountNo == accNo) {
+            printf("\n--- Account Details ---\n");
+            printf("Account Number: %d\n", accounts[i].accountNo);
+            printf("Account Holder: %s\n", accounts[i].name);
+            printf("Account Type: %s\n", accounts[i].accountType);
+            printf("Current Balance: ₹%.2f\n", accounts[i].balance);
+            return;
+        }
+    }
+    printf("❌ Account not found!\n");
+}
+
+// View statement
+void viewStatement(Account accounts[], int count) {
+    int accNo;
+    
+    printf("Enter Account Number: ");
+    scanf("%d", &accNo);
+    
+    for(int i = 0; i < count; i++) {
+        if(accounts[i].accountNo == accNo) {
+            printf("\n=========================================\n");
+            printf("      BANK ACCOUNT STATEMENT             \n");
+            printf("=========================================\n");
+            printf("Account Number: %d\n", accounts[i].accountNo);
+            printf("Account Holder: %s\n", accounts[i].name);
+            printf("Account Type: %s\n", accounts[i].accountType);
+            printf("Phone: %s\n", accounts[i].phone);
+            printf("Address: %s\n", accounts[i].address);
+            printf("=========================================\n");
+            printf("%-5s %-15s %-12s\n", "S.No", "Type", "Amount");
+            printf("=========================================\n");
+            
+            for(int j = 0; j < accounts[i].transCount; j++) {
+                printf("%-5d %-15s ₹%-10.2f\n", 
+                       j + 1,
+                       accounts[i].transactions[j] ? "Deposit" : "Withdrawal",
+                       accounts[i].transactionAmounts[j]);
+            }
+            printf("=========================================\n");
+            printf("Current Balance: ₹%.2f\n", accounts[i].balance);
+            printf("=========================================\n");
+            return;
+        }
+    }
+    printf("❌ Account not found!\n");
+}
+
+// Transfer money
+void transferMoney(Account accounts[], int count) {
+    int fromAcc, toAcc;
+    float amount;
+    
+    printf("Enter your Account Number: ");
+    scanf("%d", &fromAcc);
+    printf("Enter recipient Account Number: ");
+    scanf("%d", &toAcc);
+    
+    if(fromAcc == toAcc) {
+        printf("Cannot transfer to same account!\n");
+        return;
+    }
+    
+    int fromIdx = -1, toIdx = -1;
+    for(int i = 0; i < count; i++) {
+        if(accounts[i].accountNo == fromAcc) fromIdx = i;
+        if(accounts[i].accountNo == toAcc) toIdx = i;
+    }
+    
+    if(fromIdx == -1) {
+        printf("❌ Your account not found!\n");
+        return;
+    }
+    if(toIdx == -1) {
+        printf("❌ Recipient account not found!\n");
+        return;
+    }
+    
+    printf("Your Balance: ₹%.2f\n", accounts[fromIdx].balance);
+    printf("Enter amount to transfer: ₹");
+    scanf("%f", &amount);
+    
+    if(amount <= 0) {
+        printf("Invalid amount!\n");
+        return;
+    }
+    
+    if(amount > accounts[fromIdx].balance) {
+        printf("❌ Insufficient balance!\n");
+        return;
+    }
+    
+    // Process transfer
+    accounts[fromIdx].balance -= amount;
+    accounts[toIdx].balance += amount;
+    
+    // Record transactions
+    accounts[fromIdx].transactions[accounts[fromIdx].transCount] = 0; // Withdrawal
+    accounts[fromIdx].transactionAmounts[accounts[fromIdx].transCount] = amount;
+    accounts[fromIdx].transCount++;
+    
+    accounts[toIdx].transactions[accounts[toIdx].transCount] = 1; // Deposit
+    accounts[toIdx].transactionAmounts[accounts[toIdx].transCount] = amount;
+    accounts[toIdx].transCount++;
+    
+    printf("✅ ₹%.2f transferred successfully to Account %d!\n", amount, toAcc);
+    printf("   New Balance: ₹%.2f\n", accounts[fromIdx].balance);
+}
+
+// Search account
+void searchAccount(Account accounts[], int count) {
+    int accNo;
+    
+    printf("Enter Account Number: ");
+    scanf("%d", &accNo);
+    
+    for(int i = 0; i < count; i++) {
+        if(accounts[i].accountNo == accNo) {
+            printf("\n✅ Account Found!\n");
+            printf("Account Number: %d\n", accounts[i].accountNo);
+            printf("Account Holder: %s\n", accounts[i].name);
+            printf("Account Type: %s\n", accounts[i].accountType);
+            printf("Balance: ₹%.2f\n", accounts[i].balance);
+            printf("Phone: %s\n", accounts[i].phone);
+            printf("Address: %s\n", accounts[i].address);
+            return;
+        }
+    }
+    printf("❌ Account not found!\n");
+}
+
+// Display all accounts
+void displayAllAccounts(Account accounts[], int count) {
+    if(count == 0) {
+        printf("No accounts found!\n");
+        return;
+    }
+    
+    printf("\n--- All Bank Accounts ---\n");
+    printf("================================================================================\n");
+    printf("%-12s %-20s %-12s %-12s %-15s\n", 
+           "Account No", "Account Holder", "Type", "Balance", "Phone");
+    printf("================================================================================\n");
+    
+    float totalBalance = 0;
+    for(int i = 0; i < count; i++) {
+        printf("%-12d %-20s %-12s ₹%-11.2f %-15s\n", 
+               accounts[i].accountNo,
+               accounts[i].name,
+               accounts[i].accountType,
+               accounts[i].balance,
+               accounts[i].phone);
+        totalBalance += accounts[i].balance;
+    }
+    printf("================================================================================\n");
+    printf("Total Accounts: %d\n", count);
+    printf("Total Bank Balance: ₹%.2f\n", totalBalance);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct {
+    int seatNumber;
+    char passengerName[50];
+    int age;
+    char gender;
+    char bookingStatus[20]; // "Booked", "Available", "Cancelled"
+} Seat;
+
+typedef struct {
+    int bookingId;
+    int seatNumber;
+    char passengerName[50];
+    char bookingDate[15];
+    float fare;
+} Booking;
+
+// Function declarations
+void initializeSeats(Seat seats[], int totalSeats);
+void displaySeats(Seat seats[], int totalSeats);
+void bookTicket(Seat seats[], int totalSeats, Booking bookings[], int *bookCount);
+void cancelBooking(Seat seats[], int totalSeats, Booking bookings[], int *bookCount);
+void viewBookings(Booking bookings[], int bookCount);
+void availableSeats(Seat seats[], int totalSeats);
+void viewBookingDetails(Booking bookings[], int bookCount);
+
+int main() {
+    Seat seats[50];
+    Booking bookings[100];
+    int totalSeats = 50;
+    int bookCount = 0;
+    int choice;
+    
+    initializeSeats(seats, totalSeats);
+    
+    do {
+        printf("\n=========================================\n");
+        printf("         TICKET BOOKING SYSTEM           \n");
+        printf("=========================================\n");
+        printf("1. Display Seats\n");
+        printf("2. Book Ticket\n");
+        printf("3. Cancel Booking\n");
+        printf("4. View All Bookings\n");
+        printf("5. View Available Seats\n");
+        printf("6. View Booking Details\n");
+        printf("7. Exit\n");
+        printf("=========================================\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        getchar();
+        
+        switch(choice) {
+            case 1:
+                displaySeats(seats, totalSeats);
+                break;
+            case 2:
+                bookTicket(seats, totalSeats, bookings, &bookCount);
+                break;
+            case 3:
+                cancelBooking(seats, totalSeats, bookings, &bookCount);
+                break;
+            case 4:
+                viewBookings(bookings, bookCount);
+                break;
+            case 5:
+                availableSeats(seats, totalSeats);
+                break;
+            case 6:
+                viewBookingDetails(bookings, bookCount);
+                break;
+            case 7:
+                printf("\nThank you for using Ticket Booking System!\n");
+                break;
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while(choice != 7);
+    
+    return 0;
+}
+
+// Initialize seats
+void initializeSeats(Seat seats[], int totalSeats) {
+    for(int i = 0; i < totalSeats; i++) {
+        seats[i].seatNumber = i + 1;
+        strcpy(seats[i].passengerName, "");
+        seats[i].age = 0;
+        seats[i].gender = ' ';
+        strcpy(seats[i].bookingStatus, "Available");
+    }
+}
+
+// Display seats layout
+void displaySeats(Seat seats[], int totalSeats) {
+    printf("\n--- Seat Layout ---\n");
+    printf("========================================================\n");
+    printf("  ");
+    for(int i = 0; i < 10; i++) {
+        printf(" %2d  ", i + 1);
+    }
+    printf("\n");
+    printf("========================================================\n");
+    
+    for(int row = 0; row < 5; row++) {
+        printf("%c ", 'A' + row);
+        for(int col = 0; col < 10; col++) {
+            int seatIdx = row * 10 + col;
+            if(seatIdx < totalSeats) {
+                if(strcmp(seats[seatIdx].bookingStatus, "Available") == 0) {
+                    printf("[  ] ");
+                } else {
+                    printf("[XX] ");
+                }
+            }
+        }
+        printf("\n");
+    }
+    printf("========================================================\n");
+    printf("Legend: [  ] = Available, [XX] = Booked\n");
+}
+
+// Book ticket
+void bookTicket(Seat seats[], int totalSeats, Booking bookings[], int *bookCount) {
+    if(*bookCount >= 100) {
+        printf("Booking database full!\n");
+        return;
+    }
+    
+    int seatNo;
+    printf("Enter Seat Number (1-50): ");
+    scanf("%d", &seatNo);
+    getchar();
+    
+    if(seatNo < 1 || seatNo > totalSeats) {
+        printf("Invalid seat number!\n");
+        return;
+    }
+    
+    int idx = seatNo - 1;
+    if(strcmp(seats[idx].bookingStatus, "Booked") == 0) {
+        printf("❌ Seat %d is already booked!\n", seatNo);
+        return;
+    }
+    
+    Booking b;
+    b.seatNumber = seatNo;
+    
+    printf("Passenger Name: ");
+    fgets(b.passengerName, sizeof(b.passengerName), stdin);
+    b.passengerName[strcspn(b.passengerName, "\n")] = '\0';
+    
+    printf("Age: ");
+    scanf("%d", &seats[idx].age);
+    getchar();
+    
+    printf("Gender (M/F): ");
+    scanf("%c", &seats[idx].gender);
+    getchar();
+    
+    printf("Booking Date (DD/MM/YYYY): ");
+    fgets(b.bookingDate, sizeof(b.bookingDate), stdin);
+    b.bookingDate[strcspn(b.bookingDate, "\n")] = '\0';
+    
+    // Calculate fare
+    b.fare = 500.00; // Base fare
+    
+    // Update seat
+    strcpy(seats[idx].passengerName, b.passengerName);
+    strcpy(seats[idx].bookingStatus, "Booked");
+    
+    // Generate booking ID
+    b.bookingId = *bookCount + 1001;
+    
+    bookings[*bookCount] = b;
+    (*bookCount)++;
+    
+    printf("✅ Ticket booked successfully!\n");
+    printf("   Booking ID: %d\n", b.bookingId);
+    printf("   Seat Number: %d\n", seatNo);
+    printf("   Passenger: %s\n", b.passengerName);
+    printf("   Fare: ₹%.2f\n", b.fare);
+}
+
+// Cancel booking
+void cancelBooking(Seat seats[], int totalSeats, Booking bookings[], int *bookCount) {
+    if(*bookCount == 0) {
+        printf("No bookings found!\n");
+        return;
+    }
+    
+    int bookingId;
+    printf("Enter Booking ID to cancel: ");
+    scanf("%d", &bookingId);
+    
+    int found = -1;
+    for(int i = 0; i < *bookCount; i++) {
+        if(bookings[i].bookingId == bookingId) {
+            found = i;
+            break;
+        }
+    }
+    
+    if(found == -1) {
+        printf("❌ Booking ID not found!\n");
+        return;
+    }
+    
+    // Free the seat
+    int seatIdx = bookings[found].seatNumber - 1;
+    strcpy(seats[seatIdx].passengerName, "");
+    seats[seatIdx].age = 0;
+    seats[seatIdx].gender = ' ';
+    strcpy(seats[seatIdx].bookingStatus, "Available");
+    
+    // Remove booking
+    for(int i = found; i < *bookCount - 1; i++) {
+        bookings[i] = bookings[i + 1];
+    }
+    (*bookCount)--;
+    
+    printf("✅ Booking cancelled successfully!\n");
+    printf("   Seat %d is now available.\n", bookings[found].seatNumber);
+}
+
+// View all bookings
+void viewBookings(Booking bookings[], int bookCount) {
+    if(bookCount == 0) {
+        printf("No bookings found!\n");
+        return;
+    }
+    
+    printf("\n--- All Bookings ---\n");
+    printf("================================================================================\n");
+    printf("%-10s %-10s %-20s %-15s %-10s\n", 
+           "Booking ID", "Seat", "Passenger", "Date", "Fare");
+    printf("================================================================================\n");
+    
+    for(int i = 0; i < bookCount; i++) {
+        printf("%-10d %-10d %-20s %-15s ₹%-9.2f\n", 
+               bookings[i].bookingId,
+               bookings[i].seatNumber,
+               bookings[i].passengerName,
+               bookings[i].bookingDate,
+               bookings[i].fare);
+    }
+    printf("================================================================================\n");
+    printf("Total Bookings: %d\n", bookCount);
+}
+
+// View available seats
+void availableSeats(Seat seats[], int totalSeats) {
+    printf("\n--- Available Seats ---\n");
+    int count = 0;
+    
+    printf("Available seats: ");
+    for(int i = 0; i < totalSeats; i++) {
+        if(strcmp(seats[i].bookingStatus, "Available") == 0) {
+            printf("%d ", i + 1);
+            count++;
+        }
+    }
+    
+    if(count == 0) {
+        printf("No seats available!");
+    }
+    printf("\nTotal available: %d\n", count);
+}
+
+// View booking details
+void viewBookingDetails(Booking bookings[], int bookCount) {
+    if(bookCount == 0) {
+        printf("No bookings found!\n");
+        return;
+    }
+    
+    int bookingId;
+    printf("Enter Booking ID: ");
+    scanf("%d", &bookingId);
+    
+    for(int i = 0; i < bookCount; i++) {
+        if(bookings[i].bookingId == bookingId) {
+            printf("\n--- Booking Details ---\n");
+            printf("Booking ID: %d\n", bookings[i].bookingId);
+            printf("Seat Number: %d\n", bookings[i].seatNumber);
+            printf("Passenger Name: %s\n", bookings[i].passengerName);
+            printf("Booking Date: %s\n", bookings[i].bookingDate);
+            printf("Fare: ₹%.2f\n", bookings[i].fare);
+            return;
+        }
+    }
+    printf("❌ Booking ID not found!\n");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct {
+    int id;
+    char name[50];
+    char phone[15];
+    char email[50];
+    char address[100];
+    char group[20]; // Family, Friends, Work, etc.
+} Contact;
+
+// Function declarations
+void addContact(Contact contacts[], int *count);
+void displayContacts(Contact contacts[], int count);
+void searchContact(Contact contacts[], int count);
+void updateContact(Contact contacts[], int count);
+void deleteContact(Contact contacts[], int *count);
+void searchByGroup(Contact contacts[], int count);
+void sortContacts(Contact contacts[], int count);
+void searchByPhone(Contact contacts[], int count);
+
+int main() {
+    Contact contacts[100];
+    int count = 0;
+    int choice;
+    
+    do {
+        printf("\n=========================================\n");
+        printf("        CONTACT MANAGEMENT SYSTEM        \n");
+        printf("=========================================\n");
+        printf("1. Add Contact\n");
+        printf("2. Display All Contacts\n");
+        printf("3. Search Contact by Name\n");
+        printf("4. Update Contact\n");
+        printf("5. Delete Contact\n");
+        printf("6. Search by Group\n");
+        printf("7. Sort Contacts\n");
+        printf("8. Search by Phone\n");
+        printf("9. Exit\n");
+        printf("=========================================\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        getchar();
+        
+        switch(choice) {
+            case 1:
+                addContact(contacts, &count);
+                break;
+            case 2:
+                displayContacts(contacts, count);
+                break;
+            case 3:
+                searchContact(contacts, count);
+                break;
+            case 4:
+                updateContact(contacts, count);
+                break;
+            case 5:
+                deleteContact(contacts, &count);
+                break;
+            case 6:
+                searchByGroup(contacts, count);
+                break;
+            case 7:
+                sortContacts(contacts, count);
+                break;
+            case 8:
+                searchByPhone(contacts, count);
+                break;
+            case 9:
+                printf("\nExiting system...\n");
+                break;
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while(choice != 9);
+    
+    return 0;
+}
+
+// Add contact
+void addContact(Contact contacts[], int *count) {
+    if(*count >= 100) {
+        printf("Contact list full!\n");
+        return;
+    }
+    
+    Contact c;
+    printf("\n--- Add Contact ---\n");
+    c.id = *count + 1;
+    
+    printf("Name: ");
+    fgets(c.name, sizeof(c.name), stdin);
+    c.name[strcspn(c.name, "\n")] = '\0';
+    
+    printf("Phone Number: ");
+    fgets(c.phone, sizeof(c.phone), stdin);
+    c.phone[strcspn(c.phone, "\n")] = '\0';
+    
+    // Check for duplicate phone
+    for(int i = 0; i < *count; i++) {
+        if(strcmp(contacts[i].phone, c.phone) == 0) {
+            printf("Phone number already exists!\n");
+            return;
+        }
+    }
+    
+    printf("Email: ");
+    fgets(c.email, sizeof(c.email), stdin);
+    c.email[strcspn(c.email, "\n")] = '\0';
+    
+    printf("Address: ");
+    fgets(c.address, sizeof(c.address), stdin);
+    c.address[strcspn(c.address, "\n")] = '\0';
+    
+    printf("Group (Family/Friends/Work/Other): ");
+    fgets(c.group, sizeof(c.group), stdin);
+    c.group[strcspn(c.group, "\n")] = '\0';
+    
+    contacts[*count] = c;
+    (*count)++;
+    printf("✅ Contact added successfully!\n");
+}
+
+// Display all contacts
+void displayContacts(Contact contacts[], int count) {
+    if(count == 0) {
+        printf("No contacts found!\n");
+        return;
+    }
+    
+    printf("\n--- Contact List ---\n");
+    printf("================================================================================\n");
+    printf("%-3s %-20s %-15s %-25s %-15s\n", 
+           "ID", "Name", "Phone", "Email", "Group");
+    printf("================================================================================\n");
+    
+    for(int i = 0; i < count; i++) {
+        printf("%-3d %-20s %-15s %-25s %-15s\n", 
+               contacts[i].id,
+               contacts[i].name,
+               contacts[i].phone,
+               contacts[i].email,
+               contacts[i].group);
+    }
+    printf("================================================================================\n");
+    printf("Total Contacts: %d\n", count);
+}
+
+// Search contact by name
+void searchContact(Contact contacts[], int count) {
+    if(count == 0) {
+        printf("No contacts found!\n");
+        return;
+    }
+    
+    char name[50];
+    printf("Enter name to search: ");
+    fgets(name, sizeof(name), stdin);
+    name[strcspn(name, "\n")] = '\0';
+    
+    int found = 0;
+    printf("\n--- Search Results ---\n");
+    printf("================================================================================\n");
+    printf("%-3s %-20s %-15s %-25s %-15s %-20s\n", 
+           "ID", "Name", "Phone", "Email", "Group", "Address");
+    printf("================================================================================\n");
+    
+    for(int i = 0; i < count; i++) {
+        if(strstr(contacts[i].name, name) != NULL) {
+            printf("%-3d %-20s %-15s %-25s %-15s %-20s\n", 
+                   contacts[i].id,
+                   contacts[i].name,
+                   contacts[i].phone,
+                   contacts[i].email,
+                   contacts[i].group,
+                   contacts[i].address);
+            found = 1;
+        }
+    }
+    
+    if(!found) {
+        printf("No contacts found with name: %s\n", name);
+    }
+    printf("================================================================================\n");
+}
+
+// Update contact
+void updateContact(Contact contacts[], int count) {
+    if(count == 0) {
+        printf("No contacts found!\n");
+        return;
+    }
+    
+    int id;
+    printf("Enter Contact ID to update: ");
+    scanf("%d", &id);
+    getchar();
+    
+    if(id < 1 || id > count) {
+        printf("Invalid ID!\n");
+        return;
+    }
+    
+    int idx = id - 1;
+    printf("\n--- Update Contact (ID: %d) ---\n", contacts[idx].id);
+    printf("Current Name: %s\n", contacts[idx].name);
+    printf("New Name (press Enter to keep): ");
+    char newName[50];
+    fgets(newName, sizeof(newName), stdin);
+    if(newName[0] != '\n') {
+        newName[strcspn(newName, "\n")] = '\0';
+        strcpy(contacts[idx].name, newName);
+    }
+    
+    printf("Current Phone: %s\n", contacts[idx].phone);
+    printf("New Phone (press Enter to keep): ");
+    char newPhone[15];
+    fgets(newPhone, sizeof(newPhone), stdin);
+    if(newPhone[0] != '\n') {
+        newPhone[strcspn(newPhone, "\n")] = '\0';
+        strcpy(contacts[idx].phone, newPhone);
+    }
+    
+    printf("Current Email: %s\n", contacts[idx].email);
+    printf("New Email (press Enter to keep): ");
+    char newEmail[50];
+    fgets(newEmail, sizeof(newEmail), stdin);
+    if(newEmail[0] != '\n') {
+        newEmail[strcspn(newEmail, "\n")] = '\0';
+        strcpy(contacts[idx].email, newEmail);
+    }
+    
+    printf("Current Group: %s\n", contacts[idx].group);
+    printf("New Group (press Enter to keep): ");
+    char newGroup[20];
+    fgets(newGroup, sizeof(newGroup), stdin);
+    if(newGroup[0] != '\n') {
+        newGroup[strcspn(newGroup, "\n")] = '\0';
+        strcpy(contacts[idx].group, newGroup);
+    }
+    
+    printf("✅ Contact updated successfully!\n");
+}
+
+// Delete contact
+void deleteContact(Contact contacts[], int *count) {
+    if(*count == 0) {
+        printf("No contacts found!\n");
+        return;
+    }
+    
+    int id;
+    printf("Enter Contact ID to delete: ");
+    scanf("%d", &id);
+    
+    if(id < 1 || id > *count) {
+        printf("Invalid ID!\n");
+        return;
+    }
+    
+    printf("Are you sure you want to delete '%s'? (y/n): ", contacts[id - 1].name);
+    char confirm;
+    scanf(" %c", &confirm);
+    
+    if(confirm == 'y' || confirm == 'Y') {
+        for(int i = id - 1; i < *count - 1; i++) {
+            contacts[i] = contacts[i + 1];
+            contacts[i].id = i + 1;
+        }
+        (*count)--;
+        printf("✅ Contact deleted successfully!\n");
+    } else {
+        printf("Deletion cancelled.\n");
+    }
+}
+
+// Search by group
+void searchByGroup(Contact contacts[], int count) {
+    if(count == 0) {
+        printf("No contacts found!\n");
+        return;
+    }
+    
+    char group[20];
+    printf("Enter group name to search: ");
+    fgets(group, sizeof(group), stdin);
+    group[strcspn(group, "\n")] = '\0';
+    
+    int found = 0;
+    printf("\n--- Contacts in Group '%s' ---\n", group);
+    printf("================================================================================\n");
+    printf("%-3s %-20s %-15s %-25s\n", 
+           "ID", "Name", "Phone", "Email");
+    printf("================================================================================\n");
+    
+    for(int i = 0; i < count; i++) {
+        if(strcmp(contacts[i].group, group) == 0) {
+            printf("%-3d %-20s %-15s %-25s\n", 
+                   contacts[i].id,
+                   contacts[i].name,
+                   contacts[i].phone,
+                   contacts[i].email);
+            found = 1;
+        }
+    }
+    
+    if(!found) {
+        printf("No contacts found in group: %s\n", group);
+    }
+    printf("================================================================================\n");
+}
+
+// Sort contacts
+void sortContacts(Contact contacts[], int count) {
+    if(count <= 1) {
+        printf("Not enough contacts to sort!\n");
+        return;
+    }
+    
+    Contact temp;
+    for(int i = 0; i < count - 1; i++) {
+        for(int j = 0; j < count - i - 1; j++) {
+            if(strcmp(contacts[j].name, contacts[j + 1].name) > 0) {
+                temp = contacts[j];
+                contacts[j] = contacts[j + 1];
+                contacts[j + 1] = temp;
+            }
+        }
+    }
+    
+    // Update IDs
+    for(int i = 0; i < count; i++) {
+        contacts[i].id = i + 1;
+    }
+    
+    printf("✅ Contacts sorted alphabetically!\n");
+    displayContacts(contacts, count);
+}
+
+// Search by phone
+void searchByPhone(Contact contacts[], int count) {
+    if(count == 0) {
+        printf("No contacts found!\n");
+        return;
+    }
+    
+    char phone[15];
+    printf("Enter phone number to search: ");
+    fgets(phone, sizeof(phone), stdin);
+    phone[strcspn(phone, "\n")] = '\0';
+    
+    int found = 0;
+    for(int i = 0; i < count; i++) {
+        if(strstr(contacts[i].phone, phone) != NULL) {
+            printf("\n✅ Contact Found!\n");
+            printf("ID: %d\n", contacts[i].id);
+            printf("Name: %s\n", contacts[i].name);
+            printf("Phone: %s\n", contacts[i].phone);
+            printf("Email: %s\n", contacts[i].email);
+            printf("Group: %s\n", contacts[i].group);
+            printf("Address: %s\n", contacts[i].address);
+            found = 1;
+        }
+    }
+    
+    if(!found) {
+        printf("No contact found with phone: %s\n", phone);
+    }
+}
