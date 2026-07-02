@@ -1,0 +1,259 @@
+#include <stdio.h>
+
+int main() {
+    int op;
+    float n1, n2, res;
+
+    do {
+        printf("\n--- Basic Calculator ---\n");
+        printf("1. Addition (+)\n");
+        printf("2. Subtraction (-)\n");
+        printf("3. Multiplication (*)\n");
+        printf("4. Division (/)\n");
+        printf("5. Exit\n");
+        printf("Select an operation: ");
+        scanf("%d", &op);
+
+        if(op >= 1 && op <= 4) {
+            printf("Enter first number: ");
+            scanf("%f", &n1);
+            printf("Enter second number: ");
+            scanf("%f", &n2);
+        }
+
+        switch(op) {
+            case 1:
+                res = n1 + n2;
+                printf("-> Result: %.2f\n", res);
+                break;
+            case 2:
+                res = n1 - n2;
+                printf("-> Result: %.2f\n", res);
+                break;
+            case 3:
+                res = n1 * n2;
+                printf("-> Result: %.2f\n", res);
+                break;
+            case 4:
+                if(n2 == 0) {
+                    printf("-> Error! Division by zero is not allowed.\n");
+                } else {
+                    res = n1 / n2;
+                    printf("-> Result: %.2f\n", res);
+                }
+                break;
+            case 5:
+                printf("Turning off calculator...\n");
+                break;
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    } while(op != 5);
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int my_arr[100];
+    int sz = 0, choice, i;
+    int pos, val;
+
+    printf("Enter initial number of elements: ");
+    scanf("%d", &sz);
+    printf("Enter the elements:\n");
+    for(i = 0; i < sz; i++) {
+        scanf("%d", &my_arr[i]);
+    }
+
+    do {
+        printf("\n--- Array Operations ---\n");
+        printf("1. Display Array\n");
+        printf("2. Insert Element\n");
+        printf("3. Delete Element\n");
+        printf("4. Exit\n");
+        printf("Choice: ");
+        scanf("%d", &choice);
+
+        if(choice == 1) {
+            printf("Current Array: ");
+            for(i = 0; i < sz; i++) {
+                printf("%d ", my_arr[i]);
+            }
+            printf("\n");
+        }
+        else if(choice == 2) {
+            printf("Enter position (1 to %d) to insert: ", sz + 1);
+            scanf("%d", &pos);
+            printf("Enter value: ");
+            scanf("%d", &val);
+            
+            for(i = sz; i >= pos; i--) {
+                my_arr[i] = my_arr[i - 1];
+            }
+            my_arr[pos - 1] = val; // Insert
+            sz++; // Increase size
+            printf("-> Element inserted!\n");
+        }
+        else if(choice == 3) {
+            printf("Enter position (1 to %d) to delete: ", sz);
+            scanf("%d", &pos);
+            
+            for(i = pos - 1; i < sz - 1; i++) {
+                my_arr[i] = my_arr[i + 1];
+            }
+            sz--; // Decrease size
+            printf("-> Element deleted!\n");
+        }
+        else if(choice == 4) {
+            printf("Exiting...\n");
+        }
+        else {
+            printf("Invalid selection.\n");
+        }
+    } while(choice != 4);
+
+    return 0;
+}
+
+
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    int ch;
+    char strA[100], strB[100];
+    int i, j, len;
+
+    do {
+        printf("\n--- String Operations ---\n");
+        printf("1. Find Length\n");
+        printf("2. Copy String\n");
+        printf("3. Concatenate Strings\n");
+        printf("4. Exit\n");
+        printf("Select option: ");
+        scanf("%d", &ch);
+
+        switch(ch) {
+            case 1:
+                printf("Enter a string: ");
+                scanf(" %[^\n]s", strA);
+                len = 0;
+                while(strA[len] != '\0') { len++; }
+                printf("-> Length is: %d\n", len);
+                break;
+
+            case 2:
+                printf("Enter source string: ");
+                scanf(" %[^\n]s", strA);
+                i = 0;
+                // Manual string copy
+                while(strA[i] != '\0') {
+                    strB[i] = strA[i];
+                    i++;
+                }
+                strB[i] = '\0';
+                printf("-> Copied String is: %s\n", strB);
+                break;
+
+            case 3:
+                printf("Enter first string: ");
+                scanf(" %[^\n]s", strA);
+                printf("Enter second string: ");
+                scanf(" %[^\n]s", strB);
+                
+                i = 0;
+                while(strA[i] != '\0') { i++; } 
+                
+                j = 0;
+                while(strB[j] != '\0') {
+                    strA[i] = strB[j];
+                    i++;
+                    j++;
+                }
+                strA[i] = '\0';
+                printf("-> Concatenated String: %s\n", strA);
+                break;
+
+            case 4:
+                printf("Exiting program.\n");
+                break;
+
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while(ch != 4);
+
+    return 0;
+}
+
+
+
+
+
+
+
+#include <stdio.h>
+
+struct Product {
+    int p_code;
+    char p_name[50];
+    int stock;
+    float price;
+};
+
+int main() {
+    struct Product shop[100];
+    int t_items = 0, opt;
+
+    while(1) {
+        printf("\n--- Store Inventory Menu ---\n");
+        printf("1. Add Product\n");
+        printf("2. View All Products\n");
+        printf("3. Exit\n");
+        printf("Choice: ");
+        scanf("%d", &opt);
+
+        if(opt == 1) {
+            printf("Enter Product Code: ");
+            scanf("%d", &shop[t_items].p_code);
+            printf("Enter Product Name: ");
+            scanf(" %[^\n]s", shop[t_items].p_name);
+            printf("Enter Stock Quantity: ");
+            scanf("%d", &shop[t_items].stock);
+            printf("Enter Price: ");
+            scanf("%f", &shop[t_items].price);
+            
+            t_items++;
+            printf("-> Item added to inventory!\n");
+        }
+        else if(opt == 2) {
+            printf("\nCode\tName\t\tStock\tPrice\n");
+            printf("----------------------------------------------\n");
+            for(int i = 0; i < t_items; i++) {
+                printf("%d\t%s\t\t%d\t%.2f\n", 
+                       shop[i].p_code, shop[i].p_name, shop[i].stock, shop[i].price);
+            }
+        }
+        else if(opt == 3) {
+            printf("Closing system...\n");
+            break;
+        }
+        else {
+            printf("Invalid selection.\n");
+        }
+    }
+    return 0;
+}
